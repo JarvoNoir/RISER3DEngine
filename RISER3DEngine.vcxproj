@@ -155,6 +155,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="RISERErrorLogger.cpp" />
+    <ClCompile Include="RISERStringConverter.cpp" />
+    <ClCompile Include="RISERWindow.cpp" />
+    <ClCompile Include="RISERWindowContainer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="RISERErrorLogger.h" />
+    <ClInclude Include="RISERStringConverter.h" />
+    <ClInclude Include="RISERWindow.h" />
+    <ClInclude Include="RISERWindowContainer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
