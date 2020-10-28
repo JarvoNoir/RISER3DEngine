@@ -159,6 +159,8 @@
     <ClCompile Include="RISERErrorLogger.cpp" />
     <ClCompile Include="RISERKeyboard\RISERKeyboardClass.cpp" />
     <ClCompile Include="RISERKeyboard\RISERKeyboardEvent.cpp" />
+    <ClCompile Include="RISERMouse\RISERMouseClass.cpp" />
+    <ClCompile Include="RISERMouse\RISERMouseEvent.cpp" />
     <ClCompile Include="RISERStringConverter.cpp" />
     <ClCompile Include="RISERWindow.cpp" />
     <ClCompile Include="RISERWindowContainer.cpp" />
@@ -168,6 +170,8 @@
     <ClInclude Include="RISERErrorLogger.h" />
     <ClInclude Include="RISERKeyboard\RISERKeyboardClass.h" />
     <ClInclude Include="RISERKeyboard\RISERKeyboardEvent.h" />
+    <ClInclude Include="RISERMouse\RISERMouseClass.h" />
+    <ClInclude Include="RISERMouse\RISERMouseEvent.h" />
     <ClInclude Include="RISERStringConverter.h" />
     <ClInclude Include="RISERWindow.h" />
     <ClInclude Include="RISERWindowContainer.h" />

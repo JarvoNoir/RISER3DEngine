@@ -51,6 +51,12 @@
     <ClCompile Include="RISERKeyboard\RISERKeyboardEvent.cpp">
       <Filter>Source Files\RISERKeyboard</Filter>
     </ClCompile>
+    <ClCompile Include="RISERMouse\RISERMouseClass.cpp">
+      <Filter>Source Files\RISERMouse</Filter>
+    </ClCompile>
+    <ClCompile Include="RISERMouse\RISERMouseEvent.cpp">
+      <Filter>Source Files\RISERMouse</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RISERErrorLogger.h">
@@ -73,6 +79,12 @@
     </ClInclude>
     <ClInclude Include="RISERKeyboard\RISERKeyboardEvent.h">
       <Filter>Header Files\RISERKeyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERMouse\RISERMouseClass.h">
+      <Filter>Header Files\RISERMouse</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERMouse\RISERMouseEvent.h">
+      <Filter>Header Files\RISERMouse</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
