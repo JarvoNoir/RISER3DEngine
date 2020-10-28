@@ -30,6 +30,9 @@
     <ClCompile Include="RISERWindowContainer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RISEREngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RISERErrorLogger.h">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RISERWindowContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RISEREngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

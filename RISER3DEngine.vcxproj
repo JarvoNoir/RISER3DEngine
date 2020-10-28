@@ -155,12 +155,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="RISEREngine.cpp" />
     <ClCompile Include="RISERErrorLogger.cpp" />
     <ClCompile Include="RISERStringConverter.cpp" />
     <ClCompile Include="RISERWindow.cpp" />
     <ClCompile Include="RISERWindowContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RISEREngine.h" />
     <ClInclude Include="RISERErrorLogger.h" />
     <ClInclude Include="RISERStringConverter.h" />
     <ClInclude Include="RISERWindow.h" />
