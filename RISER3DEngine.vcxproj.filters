@@ -13,6 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\RISERKeyboard">
+      <UniqueIdentifier>{f34b03e7-c832-4e10-ba83-a2a355fe2950}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RISERMouse">
+      <UniqueIdentifier>{94689728-03eb-4b24-9b4a-57a6d5ae5745}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RISERKeyboard">
+      <UniqueIdentifier>{f75de2db-50f2-4288-8de7-0d4b2a0e9939}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RISERMouse">
+      <UniqueIdentifier>{9929502e-7a4e-491b-bc9a-a92d52920033}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -33,6 +45,12 @@
     <ClCompile Include="RISEREngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RISERKeyboard\RISERKeyboardClass.cpp">
+      <Filter>Source Files\RISERKeyboard</Filter>
+    </ClCompile>
+    <ClCompile Include="RISERKeyboard\RISERKeyboardEvent.cpp">
+      <Filter>Source Files\RISERKeyboard</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RISERErrorLogger.h">
@@ -49,6 +67,12 @@
     </ClInclude>
     <ClInclude Include="RISEREngine.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERKeyboard\RISERKeyboardClass.h">
+      <Filter>Header Files\RISERKeyboard</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERKeyboard\RISERKeyboardEvent.h">
+      <Filter>Header Files\RISERKeyboard</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

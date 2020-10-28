@@ -157,6 +157,8 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="RISEREngine.cpp" />
     <ClCompile Include="RISERErrorLogger.cpp" />
+    <ClCompile Include="RISERKeyboard\RISERKeyboardClass.cpp" />
+    <ClCompile Include="RISERKeyboard\RISERKeyboardEvent.cpp" />
     <ClCompile Include="RISERStringConverter.cpp" />
     <ClCompile Include="RISERWindow.cpp" />
     <ClCompile Include="RISERWindowContainer.cpp" />
@@ -164,6 +166,8 @@
   <ItemGroup>
     <ClInclude Include="RISEREngine.h" />
     <ClInclude Include="RISERErrorLogger.h" />
+    <ClInclude Include="RISERKeyboard\RISERKeyboardClass.h" />
+    <ClInclude Include="RISERKeyboard\RISERKeyboardEvent.h" />
     <ClInclude Include="RISERStringConverter.h" />
     <ClInclude Include="RISERWindow.h" />
     <ClInclude Include="RISERWindowContainer.h" />
