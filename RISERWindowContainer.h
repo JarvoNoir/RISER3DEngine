@@ -2,6 +2,7 @@
 #include "RISERWindow.h"
 #include "RISERKeyboard/RISERKeyboardClass.h"
 #include "RISERMouse/RISERMouseClass.h"
+#include "RISERGraphics/RISERGraphics.h"
 
 class RISERWindowContainer
 {
@@ -12,4 +13,5 @@ protected:
 	RISERWindow window;
 	RISERKeyboardClass keyboard;
 	RISERMouseClass mouse;
+	RISERGraphics gfx;
 };

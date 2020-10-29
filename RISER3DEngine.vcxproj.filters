@@ -25,6 +25,12 @@
     <Filter Include="Header Files\RISERMouse">
       <UniqueIdentifier>{9929502e-7a4e-491b-bc9a-a92d52920033}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\RISERGraphics">
+      <UniqueIdentifier>{9597b3ab-ac01-4d7a-8ffa-f0ac2e759181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RISERGraphics">
+      <UniqueIdentifier>{5a89b70b-1bdc-491e-86b4-fb012cbaa70d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -57,6 +63,12 @@
     <ClCompile Include="RISERMouse\RISERMouseEvent.cpp">
       <Filter>Source Files\RISERMouse</Filter>
     </ClCompile>
+    <ClCompile Include="RISERGraphics\RISERGraphics.cpp">
+      <Filter>Source Files\RISERGraphics</Filter>
+    </ClCompile>
+    <ClCompile Include="RISERGraphics\RISERAdapterReader.cpp">
+      <Filter>Source Files\RISERGraphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RISERErrorLogger.h">
@@ -85,6 +97,12 @@
     </ClInclude>
     <ClInclude Include="RISERMouse\RISERMouseEvent.h">
       <Filter>Header Files\RISERMouse</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\RISERGraphics.h">
+      <Filter>Header Files\RISERGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\RISERAdapterReader.h">
+      <Filter>Header Files\RISERGraphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

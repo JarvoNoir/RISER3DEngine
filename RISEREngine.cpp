@@ -2,7 +2,12 @@
 
 bool RISEREngine::Init(HINSTANCE hInstance, std::string windowTitle, std::string windowClass, int width, int height)
 {
-	return this->window.Init(this,hInstance, windowTitle, windowClass, width, height);
+	if (!this->window.Init(this, hInstance, windowTitle, windowClass, width, height))
+		return false;
+	if (!gfx.Init(this->window.GetHWND(), width, height))
+		return false;
+
+	return true;
 }
 
 bool RISEREngine::ProcessWindowMessages()

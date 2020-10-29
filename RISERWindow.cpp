@@ -125,6 +125,11 @@ bool RISERWindow::ProcessWindowMessages()
 	return true;
 }
 
+HWND RISERWindow::GetHWND() const
+{
+	return this->handle;
+}
+
 RISERWindow::~RISERWindow()
 {
 	if (this->handle != NULL)

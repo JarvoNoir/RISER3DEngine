@@ -8,6 +8,7 @@ class RISERWindow
 public:
 	bool Init(RISERWindowContainer* pWindowContainer,HINSTANCE hInstance, std::string windowTitle, std::string windowClass, int width, int height);
 	bool ProcessWindowMessages();
+	HWND GetHWND() const;
 	~RISERWindow();
 private:
 	void RegisterWindow();
