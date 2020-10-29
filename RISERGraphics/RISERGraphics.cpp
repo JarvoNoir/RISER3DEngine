@@ -4,12 +4,15 @@ bool RISERGraphics::Init(HWND hwnd, int width, int height)
 {
 	if(!InitDirectX(hwnd,width,height))
 		return false;
+	if (!InitShaders())
+		return false;
+
 	return true;
 }
 
 void RISERGraphics::RenderFrame()
 {
-	float bgColor[] = { 0.0f ,1.0f ,1.0f, 1.0f };
+	float bgColor[] = { 0.0f ,0.0f ,1.0f, 1.0f };
 	this->deviceContext->ClearRenderTargetView(this->renderTargetView.Get(), bgColor);
 	this->swapChain->Present(1, NULL);
 }
@@ -82,6 +85,45 @@ bool RISERGraphics::InitDirectX(HWND hwnd, int width, int height)
 	}
 
 	this->deviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+
+	return true;
+}
+
+bool RISERGraphics::InitShaders()
+{
+	std::wstring shaderFolder = L"";
+	//m
+#pragma region SetShaderPath
+	if (IsDebuggerPresent() == TRUE)
+	{
+#ifdef _DEBUG
+	#ifdef _WIN64 //x64
+			shaderFolder = L"..\\RISER3DEngine\\x64\\Debug\\";
+	#else	//x86
+			shaderFolder = L"..\\RISER3DEngine\\Debug\\";
+	#endif 
+#else
+	#ifdef _WIN64
+			shaderFolder = L"..\\RISER3DEngine\\x64\\Release\\";
+	#else //x86
+			shaderFolder = L"..\\RISER3DEngine\\Release\\";
+	#endif
+#endif
+	}
+	if (!vertexShader.Init(this->device, shaderFolder + L"RISERVertexShader.cso"))
+		return false;
+
+	D3D11_INPUT_ELEMENT_DESC layout[] =
+	{
+		{"POSITION",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0}
+	};
+	UINT numElements = ARRAYSIZE(layout);
+	HRESULT hr = this->device->CreateInputLayout(layout,numElements,this->vertexShader.GetBuffer()->GetBufferPointer(),this->vertexShader.GetBuffer()->GetBufferSize(),this->inputLayout.GetAddressOf());
+	if (FAILED(hr))
+	{
+		RISERErrorLogger::Log(hr, "Failed to create input layout.");
+		return false;
+	}
 
 	return true;
 }

@@ -168,6 +168,7 @@
     <ClCompile Include="RISERKeyboard\RISERKeyboardEvent.cpp" />
     <ClCompile Include="RISERMouse\RISERMouseClass.cpp" />
     <ClCompile Include="RISERMouse\RISERMouseEvent.cpp" />
+    <ClCompile Include="RISERGraphics\RISERShaders.cpp" />
     <ClCompile Include="RISERStringConverter.cpp" />
     <ClCompile Include="RISERWindow.cpp" />
     <ClCompile Include="RISERWindowContainer.cpp" />
@@ -181,9 +182,23 @@
     <ClInclude Include="RISERKeyboard\RISERKeyboardEvent.h" />
     <ClInclude Include="RISERMouse\RISERMouseClass.h" />
     <ClInclude Include="RISERMouse\RISERMouseEvent.h" />
+    <ClInclude Include="RISERGraphics\RISERShaders.h" />
     <ClInclude Include="RISERStringConverter.h" />
+    <ClInclude Include="RISERGraphics\RISERVertex.h" />
     <ClInclude Include="RISERWindow.h" />
     <ClInclude Include="RISERWindowContainer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="RISERVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

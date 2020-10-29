@@ -6,11 +6,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	_In_ int nCmdShow)
 {
 	RISEREngine engine;
-	engine.Init(hInstance, "RISER3D", "RISERWindowClass", 800, 600);
-	while (engine.ProcessWindowMessages())
+	if (engine.Init(hInstance, "RISER3D", "RISERWindowClass", 800, 600))
 	{
-		engine.Update();
-		engine.RenderFrame();
+		while (engine.ProcessWindowMessages())
+		{
+			engine.Update();
+			engine.RenderFrame();
+		}
 	}
 
 	return 0;

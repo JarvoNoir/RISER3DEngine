@@ -69,6 +69,9 @@
     <ClCompile Include="RISERGraphics\RISERAdapterReader.cpp">
       <Filter>Source Files\RISERGraphics</Filter>
     </ClCompile>
+    <ClCompile Include="RISERGraphics\RISERShaders.cpp">
+      <Filter>Source Files\RISERGraphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RISERErrorLogger.h">
@@ -104,5 +107,16 @@
     <ClInclude Include="RISERGraphics\RISERAdapterReader.h">
       <Filter>Header Files\RISERGraphics</Filter>
     </ClInclude>
+    <ClInclude Include="RISERGraphics\RISERVertex.h">
+      <Filter>Header Files\RISERGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\RISERShaders.h">
+      <Filter>Header Files\RISERGraphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="RISERVertexShader.hlsl">
+      <Filter>Resource Files</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

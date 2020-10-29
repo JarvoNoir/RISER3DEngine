@@ -7,9 +7,16 @@ void RISERErrorLogger::Log(std::string err)
 	MessageBoxA(NULL, errorMessage.c_str(), "Error", MB_ICONERROR);
 }
 
-void RISERErrorLogger::Log(HRESULT hr,std::string err)
+void RISERErrorLogger::Log(HRESULT hr,std::string error)
 {
-	_com_error error(hr);
-	std::wstring errorMessage = L"Error: " + RISERStringConverter::StringToWide(err) + L"\n";
+	_com_error err(hr);
+	std::wstring errorMessage = L"Error: " + RISERStringConverter::StringToWide(error) + L"\n";
+	MessageBoxW(NULL, errorMessage.c_str(), L"Error", MB_ICONERROR);
+}
+
+void RISERErrorLogger::Log(HRESULT hr, std::wstring error)
+{
+	_com_error err(hr);
+	std::wstring errorMessage = L"Error: " + error + L"\n " + err.ErrorMessage();
 	MessageBoxW(NULL, errorMessage.c_str(), L"Error", MB_ICONERROR);
 }
