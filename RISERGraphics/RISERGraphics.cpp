@@ -20,6 +20,7 @@ void RISERGraphics::RenderFrame()
 	//draw
 	this->deviceContext->IASetInputLayout(this->vertexShader.GetInputLayout());
 	this->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	this->deviceContext->RSSetState(this->rasterizerState.Get());
 	this->deviceContext->VSSetShader(vertexShader.GetShader(), NULL, 0);
 	this->deviceContext->PSSetShader(pixelShader.GetShader(), NULL, 0);
 	UINT stride = sizeof(RISERVertex); //size of the input for the buffer
@@ -109,6 +110,20 @@ bool RISERGraphics::InitDirectX(HWND hwnd, int width, int height)
 	viewport.Height = height;
 	//set viewport
 	this->deviceContext->RSSetViewports(1, &viewport);
+
+	//create rasterizer
+	D3D11_RASTERIZER_DESC rasterizerDesc;
+	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+	//set fill mode and turn on backface culling
+	rasterizerDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+	rasterizerDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_BACK;
+	//set rasterizer state
+	hr = this->device->CreateRasterizerState(&rasterizerDesc, this->rasterizerState.GetAddressOf());
+	if (FAILED(hr)) //If error occurred
+	{
+		RISERErrorLogger::Log(hr, "Failed to create rasterizer state.");
+		return false;
+	}
 
 	return true;
 }

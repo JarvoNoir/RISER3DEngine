@@ -17,11 +17,11 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext> deviceContext;
 	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
-
 	//shaders
 	RISERVertexShader vertexShader;
 	RISERPixelShader pixelShader;
-
 	//buffers
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
+	//rasterizer
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
 };
