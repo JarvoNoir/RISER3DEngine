@@ -10,6 +10,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	while (engine.ProcessWindowMessages())
 	{
 		engine.Update();
+		engine.RenderFrame();
 	}
 
 	return 0;

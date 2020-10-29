@@ -33,3 +33,8 @@ void RISEREngine::Update()
 		RISERMouseEvent m = mouse.ReadEvent();
 	}
 }
+
+void RISEREngine::RenderFrame()
+{
+	gfx.RenderFrame();
+}

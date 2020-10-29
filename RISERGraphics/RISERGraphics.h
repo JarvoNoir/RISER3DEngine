@@ -5,6 +5,7 @@ class RISERGraphics
 {
 public:
 	bool Init(HWND hwnd, int width, int height);
+	void RenderFrame();
 private:
 	bool InitDirectX(HWND hwnd, int width, int height);
 	
