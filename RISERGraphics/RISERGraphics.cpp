@@ -6,14 +6,27 @@ bool RISERGraphics::Init(HWND hwnd, int width, int height)
 		return false;
 	if (!InitShaders())
 		return false;
+	if (!InitScene())
+		return false;
 
 	return true;
 }
 
 void RISERGraphics::RenderFrame()
 {
-	float bgColor[] = { 0.0f ,0.0f ,1.0f, 1.0f };
+	float bgColor[] = { 0.0f ,0.0f ,0.0f, 1.0f };
+	//clear
 	this->deviceContext->ClearRenderTargetView(this->renderTargetView.Get(), bgColor);
+	//draw
+	this->deviceContext->IASetInputLayout(this->vertexShader.GetInputLayout());
+	this->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	this->deviceContext->VSSetShader(vertexShader.GetShader(), NULL, 0);
+	this->deviceContext->PSSetShader(pixelShader.GetShader(), NULL, 0);
+	UINT stride = sizeof(RISERVertex); //size of the input for the buffer
+	UINT offset = 0;
+	this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+	this->deviceContext->Draw(3, 0);
+	//present
 	this->swapChain->Present(1, NULL);
 }
 
@@ -133,6 +146,41 @@ bool RISERGraphics::InitShaders()
 
 	if (!pixelShader.Init(this->device, shaderFolder + L"RISERPixelShader.cso"))
 		return false;
+
+	return true;
+}
+
+bool RISERGraphics::InitScene()
+{
+	//create an arrary of RISER vertices
+	RISERVertex v[] =
+	{
+		RISERVertex(0.0f,-0.1f),//c
+		RISERVertex(-0.1f,0.0f),//l
+		RISERVertex(0.1f,0.0f)//r
+	};
+
+	//create description for vertex buffer
+	D3D11_BUFFER_DESC vertexBufferDesc;
+	ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
+
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = sizeof(RISERVertex) * ARRAYSIZE(v); //multiply by array size in case further verts are added later
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+
+	//create subresource data
+	D3D11_SUBRESOURCE_DATA vertexBufferData;
+	ZeroMemory(&vertexBufferData, sizeof(vertexBufferData));
+	vertexBufferData.pSysMem = v;
+
+	HRESULT hr = this->device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, this->vertexBuffer.GetAddressOf());
+	if (FAILED(hr))
+	{
+		RISERErrorLogger::Log(hr, "Failed to create vertex buffer.");
+		return false;
+	}
 
 	return true;
 }
