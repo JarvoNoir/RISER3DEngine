@@ -83,8 +83,19 @@ bool RISERGraphics::InitDirectX(HWND hwnd, int width, int height)
 		RISERErrorLogger::Log(hr, "Failed to create render target view.");
 		return false;
 	}
-
+	//set output merger
 	this->deviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+
+	//Create viewport
+	D3D11_VIEWPORT viewport;
+	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+	//define viewport properties
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.Width = width;
+	viewport.Height = height;
+	//set viewport
+	this->deviceContext->RSSetViewports(1, &viewport);
 
 	return true;
 }
@@ -118,6 +129,9 @@ bool RISERGraphics::InitShaders()
 	UINT numElements = ARRAYSIZE(layout);
 
 	if (!vertexShader.Init(this->device, shaderFolder + L"RISERVertexShader.cso",layout,numElements))
+		return false;
+
+	if (!pixelShader.Init(this->device, shaderFolder + L"RISERPixelShader.cso"))
 		return false;
 
 	return true;
