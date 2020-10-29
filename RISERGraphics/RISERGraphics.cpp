@@ -9,7 +9,7 @@ bool RISERGraphics::Init(HWND hwnd, int width, int height)
 
 void RISERGraphics::RenderFrame()
 {
-	float bgColor[] = { 0.0f ,0.0f ,1.0f, 1.0f };
+	float bgColor[] = { 0.0f ,1.0f ,1.0f, 1.0f };
 	this->deviceContext->ClearRenderTargetView(this->renderTargetView.Get(), bgColor);
 	this->swapChain->Present(1, NULL);
 }
