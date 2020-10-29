@@ -17,6 +17,5 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> renderTargetView;
 
 	//input layout
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
 	RISERVertexShader vertexShader;
 };

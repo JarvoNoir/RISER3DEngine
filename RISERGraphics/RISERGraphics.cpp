@@ -110,20 +110,15 @@ bool RISERGraphics::InitShaders()
 	#endif
 #endif
 	}
-	if (!vertexShader.Init(this->device, shaderFolder + L"RISERVertexShader.cso"))
-		return false;
-
+	//define  input layout for shader
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{"POSITION",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0}
 	};
 	UINT numElements = ARRAYSIZE(layout);
-	HRESULT hr = this->device->CreateInputLayout(layout,numElements,this->vertexShader.GetBuffer()->GetBufferPointer(),this->vertexShader.GetBuffer()->GetBufferSize(),this->inputLayout.GetAddressOf());
-	if (FAILED(hr))
-	{
-		RISERErrorLogger::Log(hr, "Failed to create input layout.");
+
+	if (!vertexShader.Init(this->device, shaderFolder + L"RISERVertexShader.cso",layout,numElements))
 		return false;
-	}
 
 	return true;
 }

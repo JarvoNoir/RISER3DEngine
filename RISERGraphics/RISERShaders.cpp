@@ -1,6 +1,6 @@
 #include "RISERShaders.h"
 
-bool RISERVertexShader::Init(Microsoft::WRL::ComPtr<ID3D11Device>& device, std::wstring shaderpath)
+bool RISERVertexShader::Init(Microsoft::WRL::ComPtr<ID3D11Device>& device, std::wstring shaderpath, D3D11_INPUT_ELEMENT_DESC* inputLayoutDesc, UINT numElements)
 {
 	HRESULT hr = D3DReadFileToBlob(shaderpath.c_str(), this->shaderBuffer.GetAddressOf());
 	if (FAILED(hr))
@@ -20,6 +20,13 @@ bool RISERVertexShader::Init(Microsoft::WRL::ComPtr<ID3D11Device>& device, std::
 		return false;
 	}
 
+	hr = device->CreateInputLayout(inputLayoutDesc, numElements, this->shaderBuffer->GetBufferPointer(), this->shaderBuffer->GetBufferSize(), this->inputLayout.GetAddressOf());
+	if (FAILED(hr))
+	{
+		RISERErrorLogger::Log(hr, "Failed to create input layout.");
+		return false;
+	}
+
 	return true;
 }
 
@@ -31,4 +38,9 @@ ID3D11VertexShader* RISERVertexShader::GetShader()
 ID3D10Blob* RISERVertexShader::GetBuffer()
 {
 	return this->shaderBuffer.Get();
+}
+
+ID3D11InputLayout* RISERVertexShader::GetInputLayout()
+{
+	return this->inputLayout.Get();
 }
