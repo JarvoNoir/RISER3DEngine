@@ -137,7 +137,9 @@ bool RISERGraphics::InitShaders()
 	//define  input layout for shader
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
-		{"POSITION",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0}
+		{"POSITION",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
+		{"COLOR",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0}
+
 	};
 	UINT numElements = ARRAYSIZE(layout);
 
@@ -155,9 +157,9 @@ bool RISERGraphics::InitScene()
 	//create an arrary of RISER vertices
 	RISERVertex v[] =
 	{
-		RISERVertex(0.0f,-0.1f),//c
-		RISERVertex(-0.1f,0.0f),//l
-		RISERVertex(0.1f,0.0f)//r
+		RISERVertex(-0.5f,-0.5f,1.0f,0.0f,0.0f),//bottom left
+		RISERVertex(0.0f,0.5f,0.0f,1.0f,0.0f),//top middle
+		RISERVertex(0.5f,-0.5f,0.0f,0.0f,1.0f)//bottom right
 	};
 
 	//create description for vertex buffer
