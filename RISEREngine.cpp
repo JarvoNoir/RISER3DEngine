@@ -31,15 +31,5 @@ void RISEREngine::Update()
 	while (!mouse.EventBufferIsEmpty())
 	{
 		RISERMouseEvent m = mouse.ReadEvent();
-		if (m.GetType() == RISERMouseEvent::EventType::RAW_MOVE)
-		{
-			std::string s = "X: ";
-			s += std::to_string(m.GetPosX());
-			s += ", ";
-			s += "Y: ";
-			s += std::to_string(m.GetPosY());
-			s += "\n";
-			OutputDebugStringA(s.c_str());
-		}
 	}
 }
