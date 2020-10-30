@@ -33,6 +33,10 @@ void RISERGraphics::RenderFrame()
 	//draw green
 	this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer2.GetAddressOf(), &stride, &offset);
 	this->deviceContext->Draw(3, 0);
+	//draw text
+	spriteBatch->Begin();
+	spriteFont->DrawString(spriteBatch.get(), L"RISER3D Engine", DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f));
+	spriteBatch->End();
 	//present
 	this->swapChain->Present(1, NULL);
 }
@@ -178,6 +182,9 @@ bool RISERGraphics::InitDirectX(HWND hwnd, int width, int height)
 		return false;
 	}
 
+	//init fonts
+	spriteBatch = std::make_unique<DirectX::SpriteBatch>(this->deviceContext.Get());
+	spriteFont = std::make_unique<DirectX::SpriteFont>(this->device.Get(), L"Data\\Fonts\\comic_sans_ms.spritefont");
 	return true;
 }
 

@@ -2,6 +2,8 @@
 #include "RISERAdapterReader.h"
 #include "RISERShaders.h"
 #include "RISERVertex.h"
+#include <SpriteBatch.h>
+#include <SpriteFont.h>
 
 class RISERGraphics
 {
@@ -29,4 +31,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
+	//fonts
+	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
+	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 };
