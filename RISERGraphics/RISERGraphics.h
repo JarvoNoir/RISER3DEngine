@@ -6,6 +6,7 @@
 #include <SpriteFont.h>
 #include <WICTextureLoader.h>
 #include "RISERVertexBuffer.h"
+#include "RISERIndexBuffer.h"
 
 class RISERGraphics
 {
@@ -26,7 +27,7 @@ private:
 	RISERPixelShader pixelShader;
 	//buffers
 	RISERVertexBuffer<RISERVertex> vertexBuffer;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> indexBuffer;
+	RISERIndexBuffer indexBuffer;
 	//rasterizer
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
 	//depth stencil view + buffer

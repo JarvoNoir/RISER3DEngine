@@ -31,8 +31,7 @@ void RISERGraphics::RenderFrame()
 	this->deviceContext->PSSetShaderResources(0, 1, this->texture.GetAddressOf());
 	this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset);
 	this->deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	this->deviceContext->DrawIndexed(6, 0, 0);
+	this->deviceContext->DrawIndexed(indexBuffer.BufferSize(), 0, 0);
 	//draw text
 	spriteBatch->Begin();
 	spriteFont->DrawString(spriteBatch.get(), L"RISER3D Engine", DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f));
@@ -260,6 +259,13 @@ bool RISERGraphics::InitScene()
 		RISERVertex( 0.5f,  0.5f, 1.0f, 1.0f, 0.0f),//top right
 		RISERVertex( 0.5f,  -0.5f, 1.0f, 1.0f, 1.0f),//bottom right
 	};
+	//load vertex data
+	HRESULT hr = this->vertexBuffer.Init(this->device.Get(), v, ARRAYSIZE(v));
+	if (FAILED(hr))
+	{
+		RISERErrorLogger::Log(hr, "Failed to create vertex buffer.");
+		return false;
+	}
 
 	DWORD indices[] =
 	{
@@ -267,27 +273,8 @@ bool RISERGraphics::InitScene()
 		0, 2, 3
 	};
 
-	//load vertex data
-	HRESULT hr = this->vertexBuffer.Init(this->device.Get(),v,ARRAYSIZE(v));
-	if (FAILED(hr))
-	{
-		RISERErrorLogger::Log(hr, "Failed to create vertex buffer.");
-		return false;
-	}
-
 	//index buffer
-	D3D11_BUFFER_DESC indexBufferDesc;
-	ZeroMemory(&indexBufferDesc, sizeof(indexBufferDesc));
-	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	indexBufferDesc.ByteWidth = sizeof(DWORD) * ARRAYSIZE(indices); //multiply by array size in case further indices are added later
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	indexBufferDesc.CPUAccessFlags = 0;
-	indexBufferDesc.MiscFlags = 0;
-
-	//create subresource data
-	D3D11_SUBRESOURCE_DATA indexBufferData;
-	indexBufferData.pSysMem = indices;
-	hr = this->device->CreateBuffer(&indexBufferDesc, &indexBufferData, this->indexBuffer.GetAddressOf());
+	hr = this->indexBuffer.Init(this->device.Get(),indices,ARRAYSIZE(indices));
 	if (FAILED(hr))
 	{
 		RISERErrorLogger::Log(hr, "Failed to create index buffer.");

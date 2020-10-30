@@ -178,6 +178,7 @@
     <ClInclude Include="RISEREngine.h" />
     <ClInclude Include="RISERErrorLogger.h" />
     <ClInclude Include="RISERGraphics\RISERGraphics.h" />
+    <ClInclude Include="RISERGraphics\RISERIndexBuffer.h" />
     <ClInclude Include="RISERKeyboard\RISERKeyboardClass.h" />
     <ClInclude Include="RISERKeyboard\RISERKeyboardEvent.h" />
     <ClInclude Include="RISERMouse\RISERMouseClass.h" />
