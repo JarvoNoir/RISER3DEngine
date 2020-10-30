@@ -20,8 +20,13 @@ private:
 	//shaders
 	RISERVertexShader vertexShader;
 	RISERPixelShader pixelShader;
-	//buffers
+	//vertex buffer
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer2;
 	//rasterizer
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
+	//depth stencil view + buffer
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState;
 };

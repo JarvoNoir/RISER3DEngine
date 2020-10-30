@@ -17,15 +17,21 @@ void RISERGraphics::RenderFrame()
 	float bgColor[] = { 0.0f ,0.0f ,0.0f, 1.0f };
 	//clear
 	this->deviceContext->ClearRenderTargetView(this->renderTargetView.Get(), bgColor);
+	this->deviceContext->ClearDepthStencilView(this->depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	//draw
 	this->deviceContext->IASetInputLayout(this->vertexShader.GetInputLayout());
 	this->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	this->deviceContext->RSSetState(this->rasterizerState.Get());
+	this->deviceContext->OMSetDepthStencilState(this->depthStencilState.Get(), 0);
 	this->deviceContext->VSSetShader(vertexShader.GetShader(), NULL, 0);
 	this->deviceContext->PSSetShader(pixelShader.GetShader(), NULL, 0);
 	UINT stride = sizeof(RISERVertex); //size of the input for the buffer
 	UINT offset = 0;
+	//draw red
 	this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
+	this->deviceContext->Draw(3, 0);
+	//draw green
+	this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer2.GetAddressOf(), &stride, &offset);
 	this->deviceContext->Draw(3, 0);
 	//present
 	this->swapChain->Present(1, NULL);
@@ -97,8 +103,53 @@ bool RISERGraphics::InitDirectX(HWND hwnd, int width, int height)
 		RISERErrorLogger::Log(hr, "Failed to create render target view.");
 		return false;
 	}
+
+	//set depth/stencil buffer
+	D3D11_TEXTURE2D_DESC depthStencilDesc;
+	depthStencilDesc.Width = width;
+	depthStencilDesc.Height = height;
+	depthStencilDesc.MipLevels = 1;
+	depthStencilDesc.ArraySize = 1;
+	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthStencilDesc.SampleDesc.Count = 1;
+	depthStencilDesc.SampleDesc.Quality = 0;
+	depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthStencilDesc.CPUAccessFlags = 0;
+	depthStencilDesc.MiscFlags = 0;
+
+	//create texture
+	hr = this->device->CreateTexture2D(&depthStencilDesc, NULL, this->depthStencilBuffer.GetAddressOf());
+	if (FAILED(hr)) //If error occurred
+	{
+		RISERErrorLogger::Log(hr, "Failed to create depth stencil buffer.");
+		return false;
+	}
+
+	//create stencil view
+	hr = this->device->CreateDepthStencilView(this->depthStencilBuffer.Get(), NULL, this->depthStencilView.GetAddressOf());
+	if (FAILED(hr)) //If error occurred
+	{
+		RISERErrorLogger::Log(hr, "Failed to create depth stencil view.");
+		return false;
+	}
+
 	//set output merger
-	this->deviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), NULL);
+	this->deviceContext->OMSetRenderTargets(1, this->renderTargetView.GetAddressOf(), this->depthStencilView.Get());
+	
+	//create depth stencil state
+	D3D11_DEPTH_STENCIL_DESC depthStencilStateDesc;
+	ZeroMemory(&depthStencilStateDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+	depthStencilStateDesc.DepthEnable = true;
+	depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK::D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_FUNC::D3D11_COMPARISON_LESS_EQUAL;
+	
+	hr = this->device->CreateDepthStencilState(&depthStencilStateDesc, this->depthStencilState.GetAddressOf());
+	if (FAILED(hr)) //If error occurred
+	{
+		RISERErrorLogger::Log(hr, "Failed to create depth stencil state.");
+		return false;
+	}
 
 	//Create viewport
 	D3D11_VIEWPORT viewport;
@@ -107,7 +158,9 @@ bool RISERGraphics::InitDirectX(HWND hwnd, int width, int height)
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
 	viewport.Width = width;
-	viewport.Height = height;
+	viewport.Height = height; 
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
 	//set viewport
 	this->deviceContext->RSSetViewports(1, &viewport);
 
@@ -152,7 +205,7 @@ bool RISERGraphics::InitShaders()
 	//define  input layout for shader
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
-		{"POSITION",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
+		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
 		{"COLOR",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0}
 
 	};
@@ -172,9 +225,10 @@ bool RISERGraphics::InitScene()
 	//create an arrary of RISER vertices
 	RISERVertex v[] =
 	{
-		RISERVertex(-0.5f,-0.5f,1.0f,0.0f,0.0f),//bottom left
-		RISERVertex(0.0f,0.5f,0.0f,1.0f,0.0f),//top middle
-		RISERVertex(0.5f,-0.5f,0.0f,0.0f,1.0f)//bottom right
+		//x,y,z, r,g,b
+		RISERVertex(-0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f),//bottom left
+		RISERVertex( 0.0f,  0.5f, 1.0f, 1.0f, 0.0f, 0.0f),//top middle
+		RISERVertex( 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f)//bottom right
 	};
 
 	//create description for vertex buffer
@@ -193,6 +247,35 @@ bool RISERGraphics::InitScene()
 	vertexBufferData.pSysMem = v;
 
 	HRESULT hr = this->device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, this->vertexBuffer.GetAddressOf());
+	if (FAILED(hr))
+	{
+		RISERErrorLogger::Log(hr, "Failed to create vertex buffer.");
+		return false;
+	}
+
+	//tri 2
+	RISERVertex v2[] =
+	{
+		//x,y,z, r,g,b
+		RISERVertex(-0.25f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f),//bottom left
+		RISERVertex(0.0f,  0.25f, 0.0f, 0.0f, 1.0f, 0.0f),//top middle
+		RISERVertex(0.25f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f)//bottom right
+	};
+
+	//create description for vertex buffer
+	ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
+
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = sizeof(RISERVertex) * ARRAYSIZE(v2); //multiply by array size in case further verts are added later
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
+
+	//create subresource data
+	ZeroMemory(&vertexBufferData, sizeof(vertexBufferData));
+	vertexBufferData.pSysMem = v2;
+
+	hr = this->device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, this->vertexBuffer2.GetAddressOf());
 	if (FAILED(hr))
 	{
 		RISERErrorLogger::Log(hr, "Failed to create vertex buffer.");
