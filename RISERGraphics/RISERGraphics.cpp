@@ -284,7 +284,7 @@ bool RISERGraphics::InitScene()
 		RISERErrorLogger::Log(hr, "Failed to create vertex buffer.");
 		return false;
 	}
-//C:\Uni Work\FYP\RISER3DEngine\Data\Textures
+
 	hr = DirectX::CreateWICTextureFromFile(this->device.Get(), L"Data\\Textures\\Teams.png", nullptr, texture.GetAddressOf());
 	if (FAILED(hr))
 	{
