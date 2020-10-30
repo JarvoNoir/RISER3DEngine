@@ -113,6 +113,9 @@
     <ClInclude Include="RISERGraphics\RISERShaders.h">
       <Filter>Header Files\RISERGraphics</Filter>
     </ClInclude>
+    <ClInclude Include="RISERGraphics\RISERVertexBuffer.h">
+      <Filter>Header Files\RISERGraphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="RISERVertexShader.hlsl">

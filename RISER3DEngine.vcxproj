@@ -185,6 +185,7 @@
     <ClInclude Include="RISERGraphics\RISERShaders.h" />
     <ClInclude Include="RISERStringConverter.h" />
     <ClInclude Include="RISERGraphics\RISERVertex.h" />
+    <ClInclude Include="RISERGraphics\RISERVertexBuffer.h" />
     <ClInclude Include="RISERWindow.h" />
     <ClInclude Include="RISERWindowContainer.h" />
   </ItemGroup>
