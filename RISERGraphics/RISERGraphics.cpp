@@ -31,7 +31,9 @@ void RISERGraphics::RenderFrame()
 	//draw square
 	this->deviceContext->PSSetShaderResources(0, 1, this->texture.GetAddressOf());
 	this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-	this->deviceContext->Draw(6, 0);
+	this->deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
+	this->deviceContext->DrawIndexed(6, 0, 0);
 	//draw text
 	spriteBatch->Begin();
 	spriteFont->DrawString(spriteBatch.get(), L"RISER3D Engine", DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f));
@@ -257,16 +259,18 @@ bool RISERGraphics::InitScene()
 		RISERVertex(-0.5f, -0.5f, 1.0f, 0.0f, 1.0f),//bottom left
 		RISERVertex(-0.5f,  0.5f, 1.0f, 0.0f, 0.0f),//top left
 		RISERVertex( 0.5f,  0.5f, 1.0f, 1.0f, 0.0f),//top right
+		RISERVertex( 0.5f,  -0.5f, 1.0f, 1.0f, 1.0f),//bottom right
+	};
 
-		RISERVertex(-0.5f, -0.5f, 1.0f, 0.0f, 1.0f),//bottom left
-		RISERVertex( 0.5f,  0.5f, 1.0f, 1.0f, 0.0f),//top right
-		RISERVertex( 0.5f,  -0.5f, 1.0f, 1.0f, 1.0f)//bottom right
+	DWORD indices[] =
+	{
+		0, 1, 2,
+		0, 2, 3
 	};
 
 	//create description for vertex buffer
 	D3D11_BUFFER_DESC vertexBufferDesc;
 	ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
-
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(RISERVertex) * ARRAYSIZE(v); //multiply by array size in case further verts are added later
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -284,7 +288,27 @@ bool RISERGraphics::InitScene()
 		RISERErrorLogger::Log(hr, "Failed to create vertex buffer.");
 		return false;
 	}
-//C:\Uni Work\FYP\RISER3DEngine\Data\Textures
+
+	//index buffer
+	D3D11_BUFFER_DESC indexBufferDesc;
+	ZeroMemory(&indexBufferDesc, sizeof(indexBufferDesc));
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth = sizeof(DWORD) * ARRAYSIZE(indices); //multiply by array size in case further indices are added later
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
+
+	//create subresource data
+	D3D11_SUBRESOURCE_DATA indexBufferData;
+	indexBufferData.pSysMem = indices;
+	hr = this->device->CreateBuffer(&indexBufferDesc, &indexBufferData, this->indexBuffer.GetAddressOf());
+	if (FAILED(hr))
+	{
+		RISERErrorLogger::Log(hr, "Failed to create index buffer.");
+		return false;
+	}
+
+	//create texture from file
 	hr = DirectX::CreateWICTextureFromFile(this->device.Get(), L"Data\\Textures\\Teams.png", nullptr, texture.GetAddressOf());
 	if (FAILED(hr))
 	{
