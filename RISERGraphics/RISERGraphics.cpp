@@ -23,16 +23,15 @@ void RISERGraphics::RenderFrame()
 	this->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	this->deviceContext->RSSetState(this->rasterizerState.Get());
 	this->deviceContext->OMSetDepthStencilState(this->depthStencilState.Get(), 0);
+	this->deviceContext->PSSetSamplers(0, 1, this->samplerState.GetAddressOf());
 	this->deviceContext->VSSetShader(vertexShader.GetShader(), NULL, 0);
 	this->deviceContext->PSSetShader(pixelShader.GetShader(), NULL, 0);
 	UINT stride = sizeof(RISERVertex); //size of the input for the buffer
 	UINT offset = 0;
-	//draw red
+	//draw square
+	this->deviceContext->PSSetShaderResources(0, 1, this->texture.GetAddressOf());
 	this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), &stride, &offset);
-	this->deviceContext->Draw(3, 0);
-	//draw green
-	this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer2.GetAddressOf(), &stride, &offset);
-	this->deviceContext->Draw(3, 0);
+	this->deviceContext->Draw(6, 0);
 	//draw text
 	spriteBatch->Begin();
 	spriteFont->DrawString(spriteBatch.get(), L"RISER3D Engine", DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f));
@@ -171,9 +170,11 @@ bool RISERGraphics::InitDirectX(HWND hwnd, int width, int height)
 	//create rasterizer
 	D3D11_RASTERIZER_DESC rasterizerDesc;
 	ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+	
 	//set fill mode and turn on backface culling
 	rasterizerDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
 	rasterizerDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_BACK;
+	
 	//set rasterizer state
 	hr = this->device->CreateRasterizerState(&rasterizerDesc, this->rasterizerState.GetAddressOf());
 	if (FAILED(hr)) //If error occurred
@@ -185,6 +186,25 @@ bool RISERGraphics::InitDirectX(HWND hwnd, int width, int height)
 	//init fonts
 	spriteBatch = std::make_unique<DirectX::SpriteBatch>(this->deviceContext.Get());
 	spriteFont = std::make_unique<DirectX::SpriteFont>(this->device.Get(), L"Data\\Fonts\\comic_sans_ms.spritefont");
+	
+	//create sampler state
+	D3D11_SAMPLER_DESC samplerDesc;
+	ZeroMemory(&samplerDesc, sizeof(D3D11_SAMPLER_DESC));
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP; // x coord
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP; // y coord
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP; // z coord
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+	hr = this->device->CreateSamplerState(&samplerDesc, this->samplerState.GetAddressOf());
+	if (FAILED(hr))
+	{
+		RISERErrorLogger::Log(hr, "Failed to create sampler state.");
+		return false;
+	}
+
+
 	return true;
 }
 
@@ -213,7 +233,7 @@ bool RISERGraphics::InitShaders()
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
 		{"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
-		{"COLOR",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0}
+		{"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0}
 
 	};
 	UINT numElements = ARRAYSIZE(layout);
@@ -230,12 +250,17 @@ bool RISERGraphics::InitShaders()
 bool RISERGraphics::InitScene()
 {
 	//create an arrary of RISER vertices
+	//square
 	RISERVertex v[] =
 	{
-		//x,y,z, r,g,b
-		RISERVertex(-0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f),//bottom left
-		RISERVertex( 0.0f,  0.5f, 1.0f, 1.0f, 0.0f, 0.0f),//top middle
-		RISERVertex( 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f)//bottom right
+		//x,y,z, u,v
+		RISERVertex(-0.5f, -0.5f, 1.0f, 0.0f, 1.0f),//bottom left
+		RISERVertex(-0.5f,  0.5f, 1.0f, 0.0f, 0.0f),//top left
+		RISERVertex( 0.5f,  0.5f, 1.0f, 1.0f, 0.0f),//top right
+
+		RISERVertex(-0.5f, -0.5f, 1.0f, 0.0f, 1.0f),//bottom left
+		RISERVertex( 0.5f,  0.5f, 1.0f, 1.0f, 0.0f),//top right
+		RISERVertex( 0.5f,  -0.5f, 1.0f, 1.0f, 1.0f)//bottom right
 	};
 
 	//create description for vertex buffer
@@ -259,33 +284,11 @@ bool RISERGraphics::InitScene()
 		RISERErrorLogger::Log(hr, "Failed to create vertex buffer.");
 		return false;
 	}
-
-	//tri 2
-	RISERVertex v2[] =
-	{
-		//x,y,z, r,g,b
-		RISERVertex(-0.25f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f),//bottom left
-		RISERVertex(0.0f,  0.25f, 0.0f, 0.0f, 1.0f, 0.0f),//top middle
-		RISERVertex(0.25f, -0.25f, 0.0f, 0.0f, 1.0f, 0.0f)//bottom right
-	};
-
-	//create description for vertex buffer
-	ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));
-
-	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(RISERVertex) * ARRAYSIZE(v2); //multiply by array size in case further verts are added later
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vertexBufferDesc.CPUAccessFlags = 0;
-	vertexBufferDesc.MiscFlags = 0;
-
-	//create subresource data
-	ZeroMemory(&vertexBufferData, sizeof(vertexBufferData));
-	vertexBufferData.pSysMem = v2;
-
-	hr = this->device->CreateBuffer(&vertexBufferDesc, &vertexBufferData, this->vertexBuffer2.GetAddressOf());
+//C:\Uni Work\FYP\RISER3DEngine\Data\Textures
+	hr = DirectX::CreateWICTextureFromFile(this->device.Get(), L"Data\\Textures\\Teams.png", nullptr, texture.GetAddressOf());
 	if (FAILED(hr))
 	{
-		RISERErrorLogger::Log(hr, "Failed to create vertex buffer.");
+		RISERErrorLogger::Log(hr, "Failed to create wic texture from file.");
 		return false;
 	}
 

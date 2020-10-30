@@ -4,9 +4,9 @@
 struct RISERVertex
 {
 	RISERVertex(){}
-	RISERVertex(float x, float y, float z, float r, float g, float b)
-		: pos(x,y,z), colour(r,g,b){}
+	RISERVertex(float x, float y, float z, float u, float v)
+		: pos(x,y,z), texCoord(u,v){}
 
 	DirectX::XMFLOAT3 pos;
-	DirectX::XMFLOAT3 colour;
+	DirectX::XMFLOAT2 texCoord;
 };

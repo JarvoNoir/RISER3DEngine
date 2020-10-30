@@ -4,6 +4,7 @@
 #include "RISERVertex.h"
 #include <SpriteBatch.h>
 #include <SpriteFont.h>
+#include <WICTextureLoader.h>
 
 class RISERGraphics
 {
@@ -24,7 +25,6 @@ private:
 	RISERPixelShader pixelShader;
 	//vertex buffer
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer;
-	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer2;
 	//rasterizer
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
 	//depth stencil view + buffer
@@ -34,4 +34,7 @@ private:
 	//fonts
 	std::unique_ptr<DirectX::SpriteBatch> spriteBatch;
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
+	//sampler
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture;
 };
