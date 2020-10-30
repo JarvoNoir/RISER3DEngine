@@ -249,7 +249,7 @@ bool RISERGraphics::InitShaders()
 
 bool RISERGraphics::InitScene()
 {
-	//create an arrary of RISER vertices
+	//create an array of RISER vertices
 	//square
 	RISERVertex v[] =
 	{
@@ -259,21 +259,20 @@ bool RISERGraphics::InitScene()
 		RISERVertex( 0.5f,  0.5f, 1.0f, 1.0f, 0.0f),//top right
 		RISERVertex( 0.5f,  -0.5f, 1.0f, 1.0f, 1.0f),//bottom right
 	};
-	//load vertex data
+	//initialise vertex buffer using verts
 	HRESULT hr = this->vertexBuffer.Init(this->device.Get(), v, ARRAYSIZE(v));
 	if (FAILED(hr))
 	{
 		RISERErrorLogger::Log(hr, "Failed to create vertex buffer.");
 		return false;
 	}
-
+	//set up indices
 	DWORD indices[] =
 	{
 		0, 1, 2,
 		0, 2, 3
 	};
-
-	//index buffer
+	//initialise index buffer using indices
 	hr = this->indexBuffer.Init(this->device.Get(),indices,ARRAYSIZE(indices));
 	if (FAILED(hr))
 	{
