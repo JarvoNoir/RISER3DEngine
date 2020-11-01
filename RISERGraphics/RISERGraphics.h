@@ -7,6 +7,8 @@
 #include <WICTextureLoader.h>
 #include "RISERVertexBuffer.h"
 #include "RISERIndexBuffer.h"
+#include "RISERConstBufferTypes.h"
+#include "RISERConstantBuffer.h"
 
 class RISERGraphics
 {
@@ -28,6 +30,7 @@ private:
 	//buffers
 	RISERVertexBuffer<RISERVertex> vertexBuffer;
 	RISERIndexBuffer indexBuffer;
+	RISERConstantBuffer<RISERCB_VS_VertexShader> constantBuffer;
 	//rasterizer
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
 	//depth stencil view + buffer
