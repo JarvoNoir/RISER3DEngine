@@ -27,6 +27,15 @@ void RISERGraphics::RenderFrame()
 	this->deviceContext->VSSetShader(vertexShader.GetShader(), NULL, 0);
 	this->deviceContext->PSSetShader(pixelShader.GetShader(), NULL, 0);
 	UINT offset = 0;
+	//Update Constant Buffer
+	RISERCB_VS_VertexShader data;
+	data.xOffset = 0.0f;
+	data.yOffset = 0.5f;
+	D3D11_MAPPED_SUBRESOURCE mappedResource;
+	HRESULT hr = this->deviceContext->Map(constantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+	CopyMemory(mappedResource.pData, &data, sizeof(RISERCB_VS_VertexShader));
+	this->deviceContext->Unmap(constantBuffer.Get(), 0);
+	this->deviceContext->VSSetConstantBuffers(0, 1, constantBuffer.GetAddressOf());
 	//draw square
 	this->deviceContext->PSSetShaderResources(0, 1, this->texture.GetAddressOf());
 	this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset);
@@ -285,6 +294,23 @@ bool RISERGraphics::InitScene()
 	if (FAILED(hr))
 	{
 		RISERErrorLogger::Log(hr, "Failed to create wic texture from file.");
+		return false;
+	}
+
+	//init Constant Buffer(s)
+	D3D11_BUFFER_DESC bufferDesc;
+	bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+	bufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	bufferDesc.MiscFlags = 0;
+	bufferDesc.ByteWidth = static_cast<UINT>(sizeof(RISERCB_VS_VertexShader) + (16 + (sizeof(RISERCB_VS_VertexShader) % 16)));
+	bufferDesc.StructureByteStride = 0;
+
+	
+	hr = device->CreateBuffer(&bufferDesc, 0, constantBuffer.GetAddressOf());
+	if (FAILED(hr))
+	{
+		RISERErrorLogger::Log(hr, "Failed to initialise constant buffer.");
 		return false;
 	}
 
