@@ -27,6 +27,12 @@ void RISERGraphics::RenderFrame()
 	this->deviceContext->VSSetShader(vertexShader.GetShader(), NULL, 0);
 	this->deviceContext->PSSetShader(pixelShader.GetShader(), NULL, 0);
 	UINT offset = 0;
+	//Update Constant Buffer
+	constantBuffer.data.xOffset = 0.0f;
+	constantBuffer.data.yOffset = 0.5f;
+	if (!constantBuffer.ApplyChanges())
+		return;
+	this->deviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
 	//draw square
 	this->deviceContext->PSSetShaderResources(0, 1, this->texture.GetAddressOf());
 	this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset);
@@ -285,6 +291,14 @@ bool RISERGraphics::InitScene()
 	if (FAILED(hr))
 	{
 		RISERErrorLogger::Log(hr, "Failed to create wic texture from file.");
+		return false;
+	}
+
+	//init Constant Buffer(s)
+	hr = this->constantBuffer.Init(this->device.Get(), this->deviceContext.Get());
+	if (FAILED(hr))
+	{
+		RISERErrorLogger::Log(hr, "Failed to initialise constant buffer.");
 		return false;
 	}
 
