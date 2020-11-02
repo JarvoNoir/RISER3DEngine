@@ -16,7 +16,7 @@ public:
 	bool Init(HWND hwnd, int width, int height);
 	void RenderFrame();
 private:
-	bool InitDirectX(HWND hwnd, int width, int height);
+	bool InitDirectX(HWND hwnd);
 	bool InitShaders();
 	bool InitScene();
 	//device setup
@@ -43,4 +43,8 @@ private:
 	//sampler
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture;
+
+	//window variables
+	int windowWidth = 0;
+	int windowHeight = 0;
 };

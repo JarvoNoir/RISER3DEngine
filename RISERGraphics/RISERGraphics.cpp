@@ -2,7 +2,11 @@
 
 bool RISERGraphics::Init(HWND hwnd, int width, int height)
 {
-	if(!InitDirectX(hwnd,width,height))
+	//set width and height variables
+	this->windowWidth = width;
+	this->windowHeight = height;
+
+	if(!InitDirectX(hwnd))
 		return false;
 	if (!InitShaders())
 		return false;
@@ -28,7 +32,22 @@ void RISERGraphics::RenderFrame()
 	this->deviceContext->PSSetShader(pixelShader.GetShader(), NULL, 0);
 	UINT offset = 0;
 	//Update Constant Buffer
-	constantBuffer.data.matrix = DirectX::XMMatrixIdentity();
+	//set world matrix
+	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
+	//create and set view matrix
+	static DirectX::XMVECTOR eyePos = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
+	static DirectX::XMVECTOR lookAtPos = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f); //look at centre of the world
+	static DirectX::XMVECTOR upVector = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); //positive Y = up
+	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(eyePos, lookAtPos, upVector);
+	//create and set projection matrix
+	float fovDegrees = 90.0f;
+	float fovRadians = (fovDegrees / 360.0f) * DirectX::XM_2PI;
+	float aspectRatio = static_cast<float>(this->windowWidth) / static_cast<float>(this->windowHeight);
+	float nearZ = 0.1f;
+	float farZ = 1000.0f;
+	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(fovRadians, aspectRatio, nearZ, farZ);
+	//set constant buffer matrix
+	constantBuffer.data.matrix = worldMatrix * viewMatrix * projectionMatrix;
 	//transpose constant buffer matrix from row major to column major
 	DirectX::XMMatrixTranspose(constantBuffer.data.matrix);
 	if (!constantBuffer.ApplyChanges())
@@ -47,7 +66,7 @@ void RISERGraphics::RenderFrame()
 	this->swapChain->Present(1, NULL);
 }
 
-bool RISERGraphics::InitDirectX(HWND hwnd, int width, int height)
+bool RISERGraphics::InitDirectX(HWND hwnd)
 {
 	std::vector<RISERAdapterData> adapters = RISERAdapterReader::GetAdapters();
 
@@ -59,8 +78,8 @@ bool RISERGraphics::InitDirectX(HWND hwnd, int width, int height)
 	//set up swapchain
 	DXGI_SWAP_CHAIN_DESC scd;
 	ZeroMemory(&scd, sizeof(DXGI_SWAP_CHAIN_DESC));
-	scd.BufferDesc.Width = width;
-	scd.BufferDesc.Height = height;
+	scd.BufferDesc.Width = this->windowWidth;
+	scd.BufferDesc.Height = this->windowHeight;
 	scd.BufferDesc.RefreshRate.Numerator = 60;
 	scd.BufferDesc.RefreshRate.Denominator = 1;
 	scd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -116,8 +135,8 @@ bool RISERGraphics::InitDirectX(HWND hwnd, int width, int height)
 
 	//set depth/stencil buffer
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
-	depthStencilDesc.Width = width;
-	depthStencilDesc.Height = height;
+	depthStencilDesc.Width = this->windowWidth;
+	depthStencilDesc.Height = this->windowHeight;
 	depthStencilDesc.MipLevels = 1;
 	depthStencilDesc.ArraySize = 1;
 	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -167,8 +186,8 @@ bool RISERGraphics::InitDirectX(HWND hwnd, int width, int height)
 	//define viewport properties
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
-	viewport.Width = width;
-	viewport.Height = height; 
+	viewport.Width = this->windowWidth;
+	viewport.Height = this->windowHeight; 
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	//set viewport
@@ -261,10 +280,10 @@ bool RISERGraphics::InitScene()
 	RISERVertex v[] =
 	{
 		//x,y,z, u,v
-		RISERVertex(-0.5f, -0.5f, 1.0f, 0.0f, 1.0f),//bottom left
-		RISERVertex(-0.5f,  0.5f, 1.0f, 0.0f, 0.0f),//top left
-		RISERVertex( 0.5f,  0.5f, 1.0f, 1.0f, 0.0f),//top right
-		RISERVertex( 0.5f,  -0.5f, 1.0f, 1.0f, 1.0f),//bottom right
+		RISERVertex(-0.5f, -0.5f, 0.0f, 0.0f, 1.0f),//bottom left
+		RISERVertex(-0.5f,  0.5f, 0.0f, 0.0f, 0.0f),//top left
+		RISERVertex( 0.5f,  0.5f, 0.0f, 1.0f, 0.0f),//top right
+		RISERVertex( 0.5f, -0.5f, 0.0f, 1.0f, 1.0f),//bottom right
 	};
 	//initialise vertex buffer using verts
 	HRESULT hr = this->vertexBuffer.Init(this->device.Get(), v, ARRAYSIZE(v));
