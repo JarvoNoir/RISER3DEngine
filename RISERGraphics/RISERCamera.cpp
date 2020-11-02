@@ -82,6 +82,32 @@ void RISERCamera::AdjustRotation(float x, float y, float z)
 	this->UpdateViewMatrix();
 }
 
+void RISERCamera::SetLookAtPosition(XMFLOAT3 lookAtPosition)
+{
+	//if camera position is the same as lookAtPosition, return (should not be looking at same pos)
+	if (lookAtPosition.x == this->pos.x && lookAtPosition.y == this->pos.y && lookAtPosition.z == this->pos.z)
+		return;
+	lookAtPosition.x = this->pos.x - lookAtPosition.x;
+	lookAtPosition.y = this->pos.y - lookAtPosition.y;
+	lookAtPosition.z = this->pos.z - lookAtPosition.z;
+
+	float pitch = 0.0f;
+	if (lookAtPosition.y != 0.0f)
+	{
+		//distance formula
+		const float distance = sqrt(lookAtPosition.x * lookAtPosition.x + lookAtPosition.z * lookAtPosition.z);
+		pitch = atan(lookAtPosition.y / distance);
+	}
+
+	float yaw = 0.0f;
+	if (lookAtPosition.x != 0.0f)
+		yaw = atan(lookAtPosition.x / lookAtPosition.z);
+	if (lookAtPosition.z > 0)
+		yaw += XM_PI;
+
+	this->SetRotation(pitch, yaw, 0.0f);
+}
+
 void RISERCamera::UpdateViewMatrix() //Updates view matrix and also updates the movement vectors
 {
 	//Calculate camera rotation matrix
