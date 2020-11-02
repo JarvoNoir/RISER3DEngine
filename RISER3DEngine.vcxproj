@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="RISERGraphics\RISERCamera.cpp" />
     <ClCompile Include="RISERGraphics\RISERAdapterReader.cpp" />
     <ClCompile Include="RISEREngine.cpp" />
     <ClCompile Include="RISERErrorLogger.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="RISERWindowContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RISERGraphics\RISERCamera.h" />
     <ClInclude Include="RISERGraphics\RISERConstantBuffer.h" />
     <ClInclude Include="RISERGraphics\RISERConstBufferTypes.h" />
     <ClInclude Include="RISERGraphics\RISERAdapterReader.h" />

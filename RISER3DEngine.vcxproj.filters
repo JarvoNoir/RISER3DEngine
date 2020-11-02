@@ -72,6 +72,9 @@
     <ClCompile Include="RISERGraphics\RISERShaders.cpp">
       <Filter>Source Files\RISERGraphics</Filter>
     </ClCompile>
+    <ClCompile Include="RISERGraphics\RISERCamera.cpp">
+      <Filter>Source Files\RISERGraphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RISERErrorLogger.h">
@@ -124,6 +127,9 @@
     </ClInclude>
     <ClInclude Include="RISERGraphics\RISERConstantBuffer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\RISERCamera.h">
+      <Filter>Header Files\RISERGraphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

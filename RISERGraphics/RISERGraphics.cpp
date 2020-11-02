@@ -33,21 +33,9 @@ void RISERGraphics::RenderFrame()
 	UINT offset = 0;
 	//Update Constant Buffer
 	//set world matrix
-	DirectX::XMMATRIX worldMatrix = DirectX::XMMatrixIdentity();
-	//create and set view matrix
-	static DirectX::XMVECTOR eyePos = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
-	static DirectX::XMVECTOR lookAtPos = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f); //look at centre of the world
-	static DirectX::XMVECTOR upVector = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f); //positive Y = up
-	DirectX::XMMATRIX viewMatrix = DirectX::XMMatrixLookAtLH(eyePos, lookAtPos, upVector);
-	//create and set projection matrix
-	float fovDegrees = 90.0f;
-	float fovRadians = (fovDegrees / 360.0f) * DirectX::XM_2PI;
-	float aspectRatio = static_cast<float>(this->windowWidth) / static_cast<float>(this->windowHeight);
-	float nearZ = 0.1f;
-	float farZ = 1000.0f;
-	DirectX::XMMATRIX projectionMatrix = DirectX::XMMatrixPerspectiveFovLH(fovRadians, aspectRatio, nearZ, farZ);
+	XMMATRIX worldMatrix = XMMatrixIdentity();
 	//set constant buffer matrix
-	constantBuffer.data.matrix = worldMatrix * viewMatrix * projectionMatrix;
+	constantBuffer.data.matrix = worldMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
 	//transpose constant buffer matrix from row major to column major
 	DirectX::XMMatrixTranspose(constantBuffer.data.matrix);
 	if (!constantBuffer.ApplyChanges())
@@ -321,6 +309,10 @@ bool RISERGraphics::InitScene()
 		RISERErrorLogger::Log(hr, "Failed to initialise constant buffer.");
 		return false;
 	}
+
+	//init camera
+	this->camera.SetPosition(0.0f, 0.0f, -2.0f);
+	this->camera.SetProjectionValues(90.0f, static_cast<float>(this->windowWidth) / static_cast<float>(this->windowHeight), 0.1f, 1000.0f);
 
 	return true;
 }
