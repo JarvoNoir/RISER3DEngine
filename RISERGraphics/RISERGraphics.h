@@ -16,6 +16,8 @@ class RISERGraphics
 public:
 	bool Init(HWND hwnd, int width, int height);
 	void RenderFrame();
+	//Camera
+	RISERCamera camera;
 private:
 	bool InitDirectX(HWND hwnd);
 	bool InitShaders();
@@ -48,7 +50,4 @@ private:
 	//window variables
 	int windowWidth = 0;
 	int windowHeight = 0;
-
-	//Camera
-	RISERCamera camera;
 };

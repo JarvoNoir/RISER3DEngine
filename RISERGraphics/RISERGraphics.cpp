@@ -34,8 +34,6 @@ void RISERGraphics::RenderFrame()
 	//Update Constant Buffer
 	//set world matrix
 	XMMATRIX worldMatrix = XMMatrixIdentity();
-	camera.AdjustPosition(0.1f, 0.0f, 0.0f);
-	camera.SetLookAtPosition(XMFLOAT3(0.0f, 0.0f, 0.0f));
 	//set constant buffer matrix
 	constantBuffer.data.matrix = worldMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
 	//transpose constant buffer matrix from row major to column major

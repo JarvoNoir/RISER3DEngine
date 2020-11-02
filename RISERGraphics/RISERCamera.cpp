@@ -108,6 +108,11 @@ void RISERCamera::SetLookAtPosition(XMFLOAT3 lookAtPosition)
 	this->SetRotation(pitch, yaw, 0.0f);
 }
 
+const XMVECTOR& RISERCamera::GetForwardVector(){ return this->forwardVector; }
+const XMVECTOR& RISERCamera::GetRightVector(){ return this->rightVector; }
+const XMVECTOR& RISERCamera::GetLeftVector(){ return this->leftVector; }
+const XMVECTOR& RISERCamera::GetBackwardVector(){ return this->backwardVector; }
+
 void RISERCamera::UpdateViewMatrix() //Updates view matrix and also updates the movement vectors
 {
 	//Calculate camera rotation matrix
@@ -120,4 +125,10 @@ void RISERCamera::UpdateViewMatrix() //Updates view matrix and also updates the 
 	XMVECTOR upDir = XMVector3TransformCoord(this->DEFAULT_UP_VECTOR, camRotationMatrix);
 	//Rebuild view matrix
 	this->viewMatrix = XMMatrixLookAtLH(this->posVector, camTarget, upDir);
+
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(this->rot.x, this->rot.y, 0.0f);
+	this->forwardVector = XMVector3TransformCoord(this->DEFAULT_FORWARD_VECTOR, rotationMatrix);
+	this->rightVector = XMVector3TransformCoord(this->DEFAULT_RIGHT_VECTOR, rotationMatrix);
+	this->leftVector = XMVector3TransformCoord(this->DEFAULT_LEFT_VECTOR, rotationMatrix);
+	this->backwardVector = XMVector3TransformCoord(this->DEFAULT_BACKWARD_VECTOR, rotationMatrix);
 }
