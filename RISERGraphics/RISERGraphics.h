@@ -10,6 +10,7 @@
 #include "RISERConstBufferTypes.h"
 #include "RISERConstantBuffer.h"
 #include"RISERCamera.h"
+#include "..\\RISERTimer.h"
 
 class RISERGraphics
 {
@@ -50,4 +51,7 @@ private:
 	//window variables
 	int windowWidth = 0;
 	int windowHeight = 0;
+
+	//timer
+	RISERTimer fpsTimer;
 };

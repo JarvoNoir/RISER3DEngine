@@ -1,5 +1,6 @@
 #pragma once
 #include "RISERWindowContainer.h"
+#include "RISERTimer.h"
 
 class RISEREngine : RISERWindowContainer
 {
@@ -8,4 +9,6 @@ public:
 	bool ProcessWindowMessages();
 	void Update();
 	void RenderFrame();
+private:
+	RISERTimer timer;
 };

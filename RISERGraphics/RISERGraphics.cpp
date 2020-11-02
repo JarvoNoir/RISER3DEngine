@@ -2,9 +2,10 @@
 
 bool RISERGraphics::Init(HWND hwnd, int width, int height)
 {
-	//set width and height variables
+	//set member variables
 	this->windowWidth = width;
 	this->windowHeight = height;
+	this->fpsTimer.Start();
 
 	if(!InitDirectX(hwnd))
 		return false;
@@ -46,9 +47,19 @@ void RISERGraphics::RenderFrame()
 	this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset);
 	this->deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 	this->deviceContext->DrawIndexed(indexBuffer.BufferSize(), 0, 0);
-	//draw text
+	//draw fps
+	static int frames = 0;
+	static std::string fpsCounter = "FPS: 0";
+	frames += 1;
+	if (fpsTimer.GetMillisecondsElapsed() > 1000.0)
+	{
+		fpsCounter = "FPS: " + std::to_string(frames);
+		frames = 0;
+		fpsTimer.Restart();
+	}
+	//draw to screen	
 	spriteBatch->Begin();
-	spriteFont->DrawString(spriteBatch.get(), L"RISER3D Engine", DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f));
+	spriteFont->DrawString(spriteBatch.get(), RISERStringConverter::StringToWide(fpsCounter).c_str(), DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f));
 	spriteBatch->End();
 	//present
 	this->swapChain->Present(1, NULL);

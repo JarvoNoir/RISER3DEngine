@@ -171,10 +171,12 @@
     <ClCompile Include="RISERMouse\RISERMouseEvent.cpp" />
     <ClCompile Include="RISERGraphics\RISERShaders.cpp" />
     <ClCompile Include="RISERStringConverter.cpp" />
+    <ClCompile Include="RISERTimer.cpp" />
     <ClCompile Include="RISERWindow.cpp" />
     <ClCompile Include="RISERWindowContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RISERTimer.h" />
     <ClInclude Include="RISERGraphics\RISERCamera.h" />
     <ClInclude Include="RISERGraphics\RISERConstantBuffer.h" />
     <ClInclude Include="RISERGraphics\RISERConstBufferTypes.h" />
