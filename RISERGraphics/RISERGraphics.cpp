@@ -28,8 +28,9 @@ void RISERGraphics::RenderFrame()
 	this->deviceContext->PSSetShader(pixelShader.GetShader(), NULL, 0);
 	UINT offset = 0;
 	//Update Constant Buffer
-	constantBuffer.data.xOffset = 0.0f;
-	constantBuffer.data.yOffset = 0.5f;
+	constantBuffer.data.matrix = DirectX::XMMatrixIdentity();
+	//transpose constant buffer matrix from row major to column major
+	DirectX::XMMatrixTranspose(constantBuffer.data.matrix);
 	if (!constantBuffer.ApplyChanges())
 		return;
 	this->deviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
