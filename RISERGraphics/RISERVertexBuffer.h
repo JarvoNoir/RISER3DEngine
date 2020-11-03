@@ -23,8 +23,14 @@ public:
 
 	HRESULT Init(ID3D11Device* device, T* data, UINT numVertices)
 	{
+		//reset to prevent memory leaks
+		if (buffer.Get() != nullptr)
+			buffer.Reset();
+
 		this->bufferSize = numVertices;
-		this->stride = std::make_unique<UINT>(sizeof(T));
+		//if stride is null, make stride
+		if(this->stride.get()==nullptr)
+			this->stride = std::make_unique<UINT>(sizeof(T));
 
 		D3D11_BUFFER_DESC vertexBufferDesc;
 		ZeroMemory(&vertexBufferDesc, sizeof(vertexBufferDesc));

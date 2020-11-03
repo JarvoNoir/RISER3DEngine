@@ -20,6 +20,10 @@ public:
 
 	HRESULT Init(ID3D11Device* device, DWORD* data, UINT numIndices)
 	{
+		//reset to prevent memory leaks
+		if (buffer.Get() != nullptr)
+			buffer.Reset();
+
 		this->bufferSize = numIndices;
 		//Load Index Data
 		D3D11_BUFFER_DESC indexBufferDesc;
