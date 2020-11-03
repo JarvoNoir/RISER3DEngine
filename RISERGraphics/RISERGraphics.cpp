@@ -41,8 +41,10 @@ void RISERGraphics::RenderFrame()
 	this->deviceContext->PSSetShader(pixelShader.GetShader(), NULL, 0);
 	UINT offset = 0;
 	//Update Constant Buffer
+	static float transOffset[3] = { 0.0f,0.0f,0.0f };
+	XMMATRIX worldMatrix = XMMatrixTranslation(transOffset[0], transOffset[1], transOffset[2]);
 	//set world matrix
-	XMMATRIX worldMatrix = XMMatrixIdentity();
+	//XMMATRIX worldMatrix = XMMatrixIdentity();
 	//set constant buffer matrix
 	constantBuffer.data.matrix = worldMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
 	//transpose constant buffer matrix from row major to column major
@@ -75,6 +77,8 @@ void RISERGraphics::RenderFrame()
 	ImGui::NewFrame();
 	//create window
 	ImGui::Begin("RISER3D");
+	ImGui::Text("RISER3d Engine UI is a go!");
+	ImGui::DragFloat3("Translation x/y/z", transOffset, 0.1f, -5.0f, 5.0f, 0, 0);
 	ImGui::End();
 	//assemble together draw data
 	ImGui::Render();
