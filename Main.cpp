@@ -22,7 +22,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 		}
 	}
 
-	//Releases COM references that ImGui was given on setup
+	//Release ImGui references
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
