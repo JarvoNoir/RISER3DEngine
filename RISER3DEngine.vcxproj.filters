@@ -31,6 +31,12 @@
     <Filter Include="Header Files\RISERGraphics">
       <UniqueIdentifier>{5a89b70b-1bdc-491e-86b4-fb012cbaa70d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\RISERGraphics\ImGui">
+      <UniqueIdentifier>{6c55465f-b6c4-4a9e-a8f1-2c7cfcf7121c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RISERGraphics\ImGui">
+      <UniqueIdentifier>{5f65384f-721c-4812-8a9c-7d3ba5bb7e0a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -77,6 +83,21 @@
     </ClCompile>
     <ClCompile Include="RISERTimer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RISERGraphics\ImGui\imgui.cpp">
+      <Filter>Source Files\RISERGraphics\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="RISERGraphics\ImGui\imgui_draw.cpp">
+      <Filter>Source Files\RISERGraphics\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="RISERGraphics\ImGui\imgui_impl_dx11.cpp">
+      <Filter>Source Files\RISERGraphics\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="RISERGraphics\ImGui\imgui_impl_win32.cpp">
+      <Filter>Source Files\RISERGraphics\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="RISERGraphics\ImGui\imgui_widgets.cpp">
+      <Filter>Source Files\RISERGraphics\ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +157,30 @@
     </ClInclude>
     <ClInclude Include="RISERTimer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\ImGui\imconfig.h">
+      <Filter>Header Files\RISERGraphics\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\ImGui\imgui.h">
+      <Filter>Header Files\RISERGraphics\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\ImGui\imgui_impl_dx11.h">
+      <Filter>Header Files\RISERGraphics\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\ImGui\imgui_impl_win32.h">
+      <Filter>Header Files\RISERGraphics\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\ImGui\imgui_internal.h">
+      <Filter>Header Files\RISERGraphics\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\ImGui\imstb_rectpack.h">
+      <Filter>Header Files\RISERGraphics\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\ImGui\imstb_textedit.h">
+      <Filter>Header Files\RISERGraphics\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\ImGui\imstb_truetype.h">
+      <Filter>Header Files\RISERGraphics\ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -14,6 +14,14 @@ bool RISERGraphics::Init(HWND hwnd, int width, int height)
 	if (!InitScene())
 		return false;
 
+	//set ImGui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	ImGui_ImplWin32_Init(hwnd);
+	ImGui_ImplDX11_Init(this->device.Get(), this->deviceContext.Get());
+	ImGui::StyleColorsDark();
+
 	return true;
 }
 
@@ -61,6 +69,17 @@ void RISERGraphics::RenderFrame()
 	spriteBatch->Begin();
 	spriteFont->DrawString(spriteBatch.get(), RISERStringConverter::StringToWide(fpsCounter).c_str(), DirectX::XMFLOAT2(0, 0), DirectX::Colors::White, 0.0f, DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::XMFLOAT2(1.0f, 1.0f));
 	spriteBatch->End();
+	//ImGui
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+	//create window
+	ImGui::Begin("RISER3D");
+	ImGui::End();
+	//assemble together draw data
+	ImGui::Render();
+	//render draw data
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	//present
 	this->swapChain->Present(1, NULL);
 }
