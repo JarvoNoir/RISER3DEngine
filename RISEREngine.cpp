@@ -37,8 +37,10 @@ void RISEREngine::Update()
 		RISERMouseEvent m = mouse.ReadEvent();
 		if (mouse.IsRightDown())
 		{
-			if(m.GetType() == RISERMouseEvent::EventType::RAW_MOVE)
+			if (m.GetType() == RISERMouseEvent::EventType::RAW_MOVE)
+			{
 				this->gfx.camera.AdjustRotation((float)m.GetPosY() * 0.01f, (float)m.GetPosX() * 0.01f, 0);
+			}
 		}
 	}
 
@@ -60,5 +62,5 @@ void RISEREngine::Update()
 
 void RISEREngine::RenderFrame()
 {
-	gfx.RenderFrame();
+	this->gfx.RenderFrame();
 }

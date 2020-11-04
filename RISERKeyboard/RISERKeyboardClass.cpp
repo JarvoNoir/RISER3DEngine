@@ -49,7 +49,7 @@ void RISERKeyboardClass::OnKeyPressed(const unsigned char key)
 
 void RISERKeyboardClass::OnKeyReleased(const unsigned char key)
 {
-	this->keystates[key] = true;
+	this->keystates[key] = false;
 	this->keyBuffer.push(RISERKeyboardEvent(RISERKeyboardEvent::EventType::Release, key));
 }
 

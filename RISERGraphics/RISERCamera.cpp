@@ -126,7 +126,7 @@ void RISERCamera::UpdateViewMatrix() //Updates view matrix and also updates the 
 	//Rebuild view matrix
 	this->viewMatrix = XMMatrixLookAtLH(this->posVector, camTarget, upDir);
 
-	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(this->rot.x, this->rot.y, 0.0f);
+	XMMATRIX rotationMatrix = XMMatrixRotationRollPitchYaw(0.0f, this->rot.y, 0.0f);
 	this->forwardVector = XMVector3TransformCoord(this->DEFAULT_FORWARD_VECTOR, rotationMatrix);
 	this->rightVector = XMVector3TransformCoord(this->DEFAULT_RIGHT_VECTOR, rotationMatrix);
 	this->leftVector = XMVector3TransformCoord(this->DEFAULT_LEFT_VECTOR, rotationMatrix);

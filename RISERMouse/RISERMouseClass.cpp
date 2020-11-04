@@ -15,25 +15,25 @@ void RISERMouseClass::OnLeftReleased(int x, int y)
 
 void RISERMouseClass::OnRightPressed(int x, int y)
 {
-	this->leftDown = false;
+	this->rightDown = true;
 	this->eventBuffer.push(RISERMouseEvent(RISERMouseEvent::EventType::RPress, x, y));
 }
 
 void RISERMouseClass::OnRightReleased(int x, int y)
 {
-	this->leftDown = false;
+	this->rightDown = false;
 	this->eventBuffer.push(RISERMouseEvent(RISERMouseEvent::EventType::RRelease, x, y));
 }
 
 void RISERMouseClass::OnMiddlePressed(int x, int y)
 {
-	this->leftDown = false;
+	this->middleDown = true;
 	this->eventBuffer.push(RISERMouseEvent(RISERMouseEvent::EventType::MPress, x, y));
 }
 
 void RISERMouseClass::OnMiddleReleased(int x, int y)
 {
-	this->leftDown = false;
+	this->middleDown = false;
 	this->eventBuffer.push(RISERMouseEvent(RISERMouseEvent::EventType::MRelease, x, y));
 }
 

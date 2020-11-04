@@ -15,7 +15,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	RISEREngine engine;
 	if (engine.Init(hInstance, "RISER3D", "RISERWindowClass", 800, 600))
 	{
-		while (engine.ProcessWindowMessages())
+		while (engine.ProcessWindowMessages()==true)
 		{
 			engine.Update();
 			engine.RenderFrame();

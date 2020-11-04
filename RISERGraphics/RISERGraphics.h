@@ -52,7 +52,9 @@ private:
 	std::unique_ptr<DirectX::SpriteFont> spriteFont;
 	//sampler
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState;
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pinkTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> grassTexture;
+	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pavementTexture;
 
 	//window variables
 	int windowWidth = 0;
