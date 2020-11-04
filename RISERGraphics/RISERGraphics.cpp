@@ -36,6 +36,7 @@ void RISERGraphics::RenderFrame()
 	this->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	this->deviceContext->RSSetState(this->rasterizerState.Get());
 	this->deviceContext->OMSetDepthStencilState(this->depthStencilState.Get(), 0);
+	this->deviceContext->OMSetBlendState(this->blendState.Get(), NULL, 0xFFFFFFFF);
 	this->deviceContext->PSSetSamplers(0, 1, this->samplerState.GetAddressOf());
 	this->deviceContext->VSSetShader(vertexShader.GetShader(), NULL, 0);
 	this->deviceContext->PSSetShader(pixelShader.GetShader(), NULL, 0);
@@ -46,12 +47,18 @@ void RISERGraphics::RenderFrame()
 	//set world matrix
 	//XMMATRIX worldMatrix = XMMatrixIdentity();
 	//set constant buffer matrix
-	constantBuffer.data.matrix = worldMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
+	risercb_vs_vertexShader.data.matrix = worldMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
 	//transpose constant buffer matrix from row major to column major
-	DirectX::XMMatrixTranspose(constantBuffer.data.matrix);
-	if (!constantBuffer.ApplyChanges())
+	DirectX::XMMatrixTranspose(risercb_vs_vertexShader.data.matrix);
+	if (!risercb_vs_vertexShader.ApplyChanges())
 		return;
-	this->deviceContext->VSSetConstantBuffers(0, 1, this->constantBuffer.GetAddressOf());
+	//set vertex
+	this->deviceContext->VSSetConstantBuffers(0, 1, this->risercb_vs_vertexShader.GetAddressOf());
+	//set pixel
+	static float alpha = 1.0f;
+	this->risercb_ps_pixelShader.data.alpha = alpha;
+	this->risercb_ps_pixelShader.ApplyChanges();
+	this->deviceContext->PSSetConstantBuffers(0, 1, this->risercb_ps_pixelShader.GetAddressOf());
 	//draw square
 	this->deviceContext->PSSetShaderResources(0, 1, this->texture.GetAddressOf());
 	this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset);
@@ -79,6 +86,7 @@ void RISERGraphics::RenderFrame()
 	ImGui::Begin("RISER3D");
 	ImGui::Text("RISER3d Engine UI is a go!");
 	ImGui::DragFloat3("Translation x/y/z", transOffset, 0.1f, -5.0f, 5.0f, 0, 0);
+	ImGui::DragFloat("Alpha", &alpha, 0.1f, 0.0f, 1.0f);
 	ImGui::End();
 	//assemble together draw data
 	ImGui::Render();
@@ -231,6 +239,29 @@ bool RISERGraphics::InitDirectX(HWND hwnd)
 		return false;
 	}
 
+	//create blend state
+	D3D11_BLEND_DESC blendDesc;
+	ZeroMemory(&blendDesc, sizeof(blendDesc));
+	D3D11_RENDER_TARGET_BLEND_DESC renderBlendState;
+	ZeroMemory(&renderBlendState, sizeof(renderBlendState));
+
+	//set flags
+	renderBlendState.BlendEnable = true;
+	renderBlendState.SrcBlend = D3D11_BLEND::D3D11_BLEND_SRC_ALPHA;
+	renderBlendState.DestBlend = D3D11_BLEND::D3D11_BLEND_INV_SRC_ALPHA;
+	renderBlendState.BlendOp = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	renderBlendState.SrcBlendAlpha = D3D11_BLEND::D3D11_BLEND_ONE;
+	renderBlendState.DestBlendAlpha = D3D11_BLEND::D3D11_BLEND_ZERO;
+	renderBlendState.BlendOpAlpha = D3D11_BLEND_OP::D3D11_BLEND_OP_ADD;
+	renderBlendState.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE::D3D11_COLOR_WRITE_ENABLE_ALL;
+	blendDesc.RenderTarget[0] = renderBlendState;
+	//set blend state
+	hr = this->device->CreateBlendState(&blendDesc, this->blendState.GetAddressOf());
+	if (FAILED(hr)) //If error occurred
+	{
+		RISERErrorLogger::Log(hr, "Failed to create blend state.");
+		return false;
+	}
 	//init fonts
 	spriteBatch = std::make_unique<DirectX::SpriteBatch>(this->deviceContext.Get());
 	spriteFont = std::make_unique<DirectX::SpriteFont>(this->device.Get(), L"Data\\Fonts\\comic_sans_ms.spritefont");
@@ -337,10 +368,17 @@ bool RISERGraphics::InitScene()
 	}
 
 	//init Constant Buffer(s)
-	hr = this->constantBuffer.Init(this->device.Get(), this->deviceContext.Get());
+	hr = this->risercb_vs_vertexShader.Init(this->device.Get(), this->deviceContext.Get());
 	if (FAILED(hr))
 	{
-		RISERErrorLogger::Log(hr, "Failed to initialise constant buffer.");
+		RISERErrorLogger::Log(hr, "Failed to initialise constant buffer(risercb_vs_vertexShader).");
+		return false;
+	}
+
+	hr = this->risercb_ps_pixelShader.Init(this->device.Get(), this->deviceContext.Get());
+	if (FAILED(hr))
+	{
+		RISERErrorLogger::Log(hr, "Failed to initialise constant buffer(risercb_ps_pixelShader).");
 		return false;
 	}
 

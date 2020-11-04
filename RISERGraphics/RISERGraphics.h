@@ -37,9 +37,12 @@ private:
 	//buffers
 	RISERVertexBuffer<RISERVertex> vertexBuffer;
 	RISERIndexBuffer indexBuffer;
-	RISERConstantBuffer<RISERCB_VS_VertexShader> constantBuffer;
+	RISERConstantBuffer<RISERCB_VS_VertexShader> risercb_vs_vertexShader;
+	RISERConstantBuffer<RISERCB_PS_PixelShader> risercb_ps_pixelShader;
 	//rasterizer
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizerState;
+	//blend state
+	Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
 	//depth stencil view + buffer
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> depthStencilView;
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilBuffer;
