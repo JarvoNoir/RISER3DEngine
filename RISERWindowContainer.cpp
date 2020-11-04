@@ -43,7 +43,6 @@ LRESULT RISERWindowContainer::WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LP
 			const bool wasPressed = lParam & (1 << 0x40000000);
 			if (!wasPressed)
 			{
-				
 				keyboard.OnKeyPressed(keycode);
 			}
 		}
