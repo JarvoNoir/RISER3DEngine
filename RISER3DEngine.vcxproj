@@ -172,6 +172,7 @@
     <ClCompile Include="RISERGraphics\RISERGraphics.cpp" />
     <ClCompile Include="RISERKeyboard\RISERKeyboardClass.cpp" />
     <ClCompile Include="RISERKeyboard\RISERKeyboardEvent.cpp" />
+    <ClCompile Include="RISERGraphics\RISERModel.cpp" />
     <ClCompile Include="RISERMouse\RISERMouseClass.cpp" />
     <ClCompile Include="RISERMouse\RISERMouseEvent.cpp" />
     <ClCompile Include="RISERGraphics\RISERShaders.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="RISERGraphics\ImGui\imstb_rectpack.h" />
     <ClInclude Include="RISERGraphics\ImGui\imstb_textedit.h" />
     <ClInclude Include="RISERGraphics\ImGui\imstb_truetype.h" />
+    <ClInclude Include="RISERGraphics\RISERModel.h" />
     <ClInclude Include="RISERTimer.h" />
     <ClInclude Include="RISERGraphics\RISERCamera.h" />
     <ClInclude Include="RISERGraphics\RISERConstantBuffer.h" />

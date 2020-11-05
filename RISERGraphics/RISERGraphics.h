@@ -1,19 +1,15 @@
 #pragma once
 #include "RISERAdapterReader.h"
 #include "RISERShaders.h"
-#include "RISERVertex.h"
 #include <SpriteBatch.h>
 #include <SpriteFont.h>
 #include <WICTextureLoader.h>
-#include "RISERVertexBuffer.h"
-#include "RISERIndexBuffer.h"
-#include "RISERConstBufferTypes.h"
-#include "RISERConstantBuffer.h"
 #include"RISERCamera.h"
 #include "..\\RISERTimer.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_impl_dx11.h"
+#include "RISERModel.h"
 
 class RISERGraphics
 {
@@ -35,8 +31,6 @@ private:
 	RISERVertexShader vertexShader;
 	RISERPixelShader pixelShader;
 	//buffers
-	RISERVertexBuffer<RISERVertex> vertexBuffer;
-	RISERIndexBuffer indexBuffer;
 	RISERConstantBuffer<RISERCB_VS_VertexShader> risercb_vs_vertexShader;
 	RISERConstantBuffer<RISERCB_PS_PixelShader> risercb_ps_pixelShader;
 	//rasterizer
@@ -55,11 +49,11 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pinkTexture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> grassTexture;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pavementTexture;
-
 	//window variables
 	int windowWidth = 0;
 	int windowHeight = 0;
-
 	//timer
 	RISERTimer fpsTimer;
+	//model
+	RISERModel model;
 };

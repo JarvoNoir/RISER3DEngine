@@ -99,6 +99,9 @@
     <ClCompile Include="RISERGraphics\ImGui\imgui_widgets.cpp">
       <Filter>Source Files\RISERGraphics\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="RISERGraphics\RISERModel.cpp">
+      <Filter>Source Files\RISERGraphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RISERErrorLogger.h">
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="RISERCOMException.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\RISERModel.h">
+      <Filter>Header Files\RISERGraphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

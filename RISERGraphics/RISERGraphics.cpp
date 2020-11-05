@@ -36,36 +36,13 @@ void RISERGraphics::RenderFrame()
 	this->deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	this->deviceContext->RSSetState(this->rasterizerState.Get());
 	this->deviceContext->OMSetDepthStencilState(this->depthStencilState.Get(), 0);
-	this->deviceContext->OMSetBlendState(this->blendState.Get(), NULL, 0xFFFFFFFF);
+	this->deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFFFF);
 	this->deviceContext->PSSetSamplers(0, 1, this->samplerState.GetAddressOf());
 	this->deviceContext->VSSetShader(vertexShader.GetShader(), NULL, 0);
 	this->deviceContext->PSSetShader(pixelShader.GetShader(), NULL, 0);
 	UINT offset = 0;
-	static float alpha = 1.0f;
-	//Update Constant Buffer
-	{//pavement
-		static float transOffset[3] = { 0.0f,0.0f,0.0f };
-		XMMATRIX worldMatrix = XMMatrixTranslation(transOffset[0], transOffset[1], transOffset[2]);
-		//set world matrix
-		//XMMATRIX worldMatrix = XMMatrixIdentity();
-
-		//set constant buffer matrix
-		risercb_vs_vertexShader.data.matrix = worldMatrix * camera.GetViewMatrix() * camera.GetProjectionMatrix();
-		//transpose constant buffer matrix from row major to column major
-		DirectX::XMMatrixTranspose(risercb_vs_vertexShader.data.matrix);
-		if (!risercb_vs_vertexShader.ApplyChanges())
-			return;
-		//set vertex
-		this->deviceContext->VSSetConstantBuffers(0, 1, this->risercb_vs_vertexShader.GetAddressOf());
-		//set pixel
-		this->risercb_ps_pixelShader.data.alpha = alpha;
-		this->risercb_ps_pixelShader.ApplyChanges();
-		this->deviceContext->PSSetConstantBuffers(0, 1, this->risercb_ps_pixelShader.GetAddressOf());
-		//draw grass
-		this->deviceContext->PSSetShaderResources(0, 1, this->pavementTexture.GetAddressOf());
-		this->deviceContext->IASetVertexBuffers(0, 1, vertexBuffer.GetAddressOf(), vertexBuffer.StridePtr(), &offset);
-		this->deviceContext->IASetIndexBuffer(indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-		this->deviceContext->DrawIndexed(indexBuffer.BufferSize(), 0, 0);
+	{
+		this->model.Draw(camera.GetViewMatrix() * camera.GetProjectionMatrix());
 	}
 	
 	//draw fps
@@ -90,7 +67,7 @@ void RISERGraphics::RenderFrame()
 	ImGui::Begin("RISER3D");
 	ImGui::Text("RISER3d Engine UI is a go!");
 	//ImGui::DragFloat3("Translation x/y/z", transOffset, 0.1f, -5.0f, 5.0f, 0, 0);
-	ImGui::DragFloat("Alpha", &alpha, 0.1f, 0.0f, 1.0f);
+	//ImGui::DragFloat("Alpha", &alpha, 0.1f, 0.0f, 1.0f);
 	ImGui::End();
 	//assemble together draw data
 	ImGui::Render();
@@ -277,45 +254,8 @@ bool RISERGraphics::InitScene()
 {
 	try
 	{
-		//create an array of RISER vertices
-		//square
-		RISERVertex v[] =
-		{
-			//x,y,z, u,v
-			RISERVertex(-0.5f,  -0.5f, -0.5f, 0.0f, 1.0f), //FRONT Bottom Left   - [0]
-			RISERVertex(-0.5f,   0.5f, -0.5f, 0.0f, 0.0f), //FRONT Top Left      - [1]
-			RISERVertex(0.5f,   0.5f, -0.5f, 1.0f, 0.0f), //FRONT Top Right     - [2]
-			RISERVertex(0.5f,  -0.5f, -0.5f, 1.0f, 1.0f), //FRONT Bottom Right   - [3]
-			RISERVertex(-0.5f,  -0.5f, 0.5f, 0.0f, 1.0f), //BACK Bottom Left   - [4]
-			RISERVertex(-0.5f,   0.5f, 0.5f, 0.0f, 0.0f), //BACK Top Left      - [5]
-			RISERVertex(0.5f,   0.5f, 0.5f, 1.0f, 0.0f), //BACK Top Right     - [6]
-			RISERVertex(0.5f,  -0.5f, 0.5f, 1.0f, 1.0f), //BACK Bottom Right   - [7]
-		};
-		//initialise vertex buffer using verts
-		HRESULT hr = this->vertexBuffer.Init(this->device.Get(), v, ARRAYSIZE(v));
-		RISERCOM_ERROR_IF_FAILED(hr, "Failed to create vertex buffer.");
-		//set up indices
-		DWORD indices[] =
-		{
-			0, 1, 2, //FRONT
-			0, 2, 3, //FRONT
-			4, 7, 6, //BACK 
-			4, 6, 5, //BACK
-			3, 2, 6, //RIGHT SIDE
-			3, 6, 7, //RIGHT SIDE
-			4, 5, 1, //LEFT SIDE
-			4, 1, 0, //LEFT SIDE
-			1, 5, 6, //TOP
-			1, 6, 2, //TOP
-			0, 3, 7, //BOTTOM
-			0, 7, 4, //BOTTOM
-		};
-		//initialise index buffer using indices
-		hr = this->indexBuffer.Init(this->device.Get(), indices, ARRAYSIZE(indices));
-		RISERCOM_ERROR_IF_FAILED(hr, "Failed to create index buffer.");
-
-		//create texture from file
-		hr = DirectX::CreateWICTextureFromFile(this->device.Get(), L"Data\\Textures\\seamless_grass.jpg", nullptr, grassTexture.GetAddressOf());
+		//load texture(s) from file
+		HRESULT hr = DirectX::CreateWICTextureFromFile(this->device.Get(), L"Data\\Textures\\seamless_grass.jpg", nullptr, grassTexture.GetAddressOf());
 		RISERCOM_ERROR_IF_FAILED(hr, "Failed to create wic texture from file.");
 
 		hr = DirectX::CreateWICTextureFromFile(this->device.Get(), L"Data\\Textures\\pinksquare.jpg", nullptr, pinkTexture.GetAddressOf());
@@ -330,7 +270,9 @@ bool RISERGraphics::InitScene()
 
 		hr = this->risercb_ps_pixelShader.Init(this->device.Get(), this->deviceContext.Get());
 		RISERCOM_ERROR_IF_FAILED(hr, "Failed to initialise constant buffer(risercb_ps_pixelShader).");
-
+		//init model(s)
+		if (!model.Init(this->device.Get(), this->deviceContext.Get(), this->pavementTexture.Get(), risercb_vs_vertexShader))
+			return false;
 		//init camera
 		this->camera.SetPosition(0.0f, 0.0f, -2.0f);
 		this->camera.SetProjectionValues(90.0f, static_cast<float>(this->windowWidth) / static_cast<float>(this->windowHeight), 0.1f, 1000.0f);
