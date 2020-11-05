@@ -44,6 +44,8 @@ void RISEREngine::Update()
 		}
 	}
 
+	this->gfx.model.AdjustRotation(0.0f, 0.001f * deltaTime, 0.0f);
+
 	const float cameraSpeed = 0.06f;
 	//camera movement
 	if (keyboard.KeyIsPressed('W'))

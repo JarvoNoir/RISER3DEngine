@@ -18,6 +18,8 @@ public:
 	void RenderFrame();
 	//Camera
 	RISERCamera camera;
+	//model
+	RISERModel model;
 private:
 	bool InitDirectX(HWND hwnd);
 	bool InitShaders();
@@ -54,6 +56,4 @@ private:
 	int windowHeight = 0;
 	//timer
 	RISERTimer fpsTimer;
-	//model
-	RISERModel model;
 };

@@ -273,6 +273,7 @@ bool RISERGraphics::InitScene()
 		//init model(s)
 		if (!model.Init(this->device.Get(), this->deviceContext.Get(), this->pavementTexture.Get(), risercb_vs_vertexShader))
 			return false;
+		
 		//init camera
 		this->camera.SetPosition(0.0f, 0.0f, -2.0f);
 		this->camera.SetProjectionValues(90.0f, static_cast<float>(this->windowWidth) / static_cast<float>(this->windowHeight), 0.1f, 1000.0f);

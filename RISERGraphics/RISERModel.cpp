@@ -51,7 +51,8 @@ bool RISERModel::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 		RISERErrorLogger::Log(exception);
 		return false;
 	}
-
+	this->SetPosition(0.0f,0.0f,0.0f);
+	this->SetRotation(0.0f, 0.0f, 0.0f);
 	this->UpdateWorldMatrix();
 	return true;
 }
@@ -77,7 +78,13 @@ void RISERModel::Draw(const XMMATRIX& viewProjectionMatrix)
 
 void RISERModel::UpdateWorldMatrix()
 {
-	this->worldMatrix = XMMatrixIdentity();
+	//this->worldMatrix = XMMatrixIdentity();
+	this->worldMatrix = XMMatrixRotationRollPitchYaw(this->rot.x, this->rot.y, this->rot.z) * XMMatrixTranslation(this->pos.x, this->pos.y, this->pos.z);
+	XMMATRIX vecRotationMatrix = XMMatrixRotationRollPitchYaw(0.0f, this->rot.y, 0.0f);
+	this->forwardVector = XMVector3TransformCoord(this->DEFAULT_FORWARD_VECTOR, vecRotationMatrix);
+	this->backwardVector = XMVector3TransformCoord(this->DEFAULT_BACKWARD_VECTOR, vecRotationMatrix);
+	this->leftVector = XMVector3TransformCoord(this->DEFAULT_LEFT_VECTOR, vecRotationMatrix);
+	this->rightVector = XMVector3TransformCoord(this->DEFAULT_RIGHT_VECTOR, vecRotationMatrix);
 }
 
 const XMVECTOR& RISERModel::GetPositionVector() const
