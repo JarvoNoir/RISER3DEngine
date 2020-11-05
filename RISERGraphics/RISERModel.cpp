@@ -79,3 +79,163 @@ void RISERModel::UpdateWorldMatrix()
 {
 	this->worldMatrix = XMMatrixIdentity();
 }
+
+const XMVECTOR& RISERModel::GetPositionVector() const
+{
+	return this->posVector;
+}
+
+const XMFLOAT3& RISERModel::GetPositionFloat3() const
+{
+	return this->pos;
+}
+
+const XMVECTOR& RISERModel::GetRotationVector() const
+{
+	return this->rotVector;
+}
+
+const XMFLOAT3& RISERModel::GetRotationFloat3() const
+{
+	return this->rot;
+}
+
+void RISERModel::SetPosition(const XMVECTOR& pos)
+{
+	XMStoreFloat3(&this->pos, pos);
+	this->posVector = pos;
+	this->UpdateWorldMatrix();
+}
+
+void RISERModel::SetPosition(const XMFLOAT3& pos)
+{
+	this->pos = pos;
+	this->posVector = XMLoadFloat3(&this->pos);
+	this->UpdateWorldMatrix();
+}
+
+void RISERModel::SetPosition(float x, float y, float z)
+{
+	this->pos = XMFLOAT3(x, y, z);
+	this->posVector = XMLoadFloat3(&this->pos);
+	this->UpdateWorldMatrix();
+}
+
+void RISERModel::AdjustPosition(const XMVECTOR& pos)
+{
+	this->posVector += pos;
+	XMStoreFloat3(&this->pos, this->posVector);
+	this->UpdateWorldMatrix();
+}
+
+void RISERModel::AdjustPosition(const XMFLOAT3& pos)
+{
+	this->pos.x += pos.y;
+	this->pos.y += pos.y;
+	this->pos.z += pos.z;
+	this->posVector = XMLoadFloat3(&this->pos);
+	this->UpdateWorldMatrix();
+}
+
+void RISERModel::AdjustPosition(float x, float y, float z)
+{
+	this->pos.x += x;
+	this->pos.y += y;
+	this->pos.z += z;
+	this->posVector = XMLoadFloat3(&this->pos);
+	this->UpdateWorldMatrix();
+}
+
+void RISERModel::SetRotation(const XMVECTOR& rot)
+{
+	this->rotVector = rot;
+	XMStoreFloat3(&this->rot, rot);
+	this->UpdateWorldMatrix();
+}
+
+void RISERModel::SetRotation(const XMFLOAT3& rot)
+{
+	this->rot = rot;
+	this->rotVector = XMLoadFloat3(&this->rot);
+	this->UpdateWorldMatrix();
+}
+
+void RISERModel::SetRotation(float x, float y, float z)
+{
+	this->rot = XMFLOAT3(x, y, z);
+	this->rotVector = XMLoadFloat3(&this->rot);
+	this->UpdateWorldMatrix();
+}
+
+void RISERModel::AdjustRotation(const XMVECTOR& rot)
+{
+	this->rotVector += rot;
+	XMStoreFloat3(&this->rot, this->rotVector);
+	this->UpdateWorldMatrix();
+}
+
+void RISERModel::AdjustRotation(const XMFLOAT3& rot)
+{
+	this->rot.x += rot.x;
+	this->rot.y += rot.y;
+	this->rot.z += rot.z;
+	this->rotVector = XMLoadFloat3(&this->rot);
+	this->UpdateWorldMatrix();
+}
+
+void RISERModel::AdjustRotation(float x, float y, float z)
+{
+	this->rot.x += x;
+	this->rot.y += y;
+	this->rot.z += z;
+	this->rotVector = XMLoadFloat3(&this->rot);
+	this->UpdateWorldMatrix();
+}
+
+void RISERModel::SetLookAtPos(XMFLOAT3 lookAtPos)
+{
+	//Verify that look at pos is not the same as cam pos. They cannot be the same as that wouldn't make sense and would result in undefined behavior.
+	if (lookAtPos.x == this->pos.x && lookAtPos.y == this->pos.y && lookAtPos.z == this->pos.z)
+		return;
+
+	lookAtPos.x = this->pos.x - lookAtPos.x;
+	lookAtPos.y = this->pos.y - lookAtPos.y;
+	lookAtPos.z = this->pos.z - lookAtPos.z;
+
+	float pitch = 0.0f;
+	if (lookAtPos.y != 0.0f)
+	{
+		const float distance = sqrt(lookAtPos.x * lookAtPos.x + lookAtPos.z * lookAtPos.z);
+		pitch = atan(lookAtPos.y / distance);
+	}
+
+	float yaw = 0.0f;
+	if (lookAtPos.x != 0.0f)
+	{
+		yaw = atan(lookAtPos.x / lookAtPos.z);
+	}
+	if (lookAtPos.z > 0)
+		yaw += XM_PI;
+
+	this->SetRotation(pitch, yaw, 0.0f);
+}
+
+const XMVECTOR& RISERModel::GetForwardVector()
+{
+	return this->forwardVector;
+}
+
+const XMVECTOR& RISERModel::GetRightVector()
+{
+	return this->rightVector;
+}
+
+const XMVECTOR& RISERModel::GetBackwardVector()
+{
+	return this->backwardVector;
+}
+
+const XMVECTOR& RISERModel::GetLeftVector()
+{
+	return this->leftVector;
+}
