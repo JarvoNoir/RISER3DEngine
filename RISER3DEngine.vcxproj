@@ -181,6 +181,7 @@
     <ClCompile Include="RISERWindowContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RISERCOMException.h" />
     <ClInclude Include="RISERGraphics\ImGui\imconfig.h" />
     <ClInclude Include="RISERGraphics\ImGui\imgui.h" />
     <ClInclude Include="RISERGraphics\ImGui\imgui_impl_dx11.h" />
