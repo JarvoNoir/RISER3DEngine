@@ -73,22 +73,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\Uni Work\FYP\RISER3DEngine\Includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Uni Work\FYP\RISER3DEngine\Libs\x86\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Uni Work\FYP\RISER3DEngine\Libs\x86\Debug;C:\Uni Work\FYP\RISER3DEngine\Libs\Additional;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Uni Work\RISER3DEngine\Includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Uni Work\FYP\RISER3DEngine\Libs\x86\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Uni Work\FYP\RISER3DEngine\Libs\x86\Release;C:\Uni Work\FYP\RISER3DEngine\Libs\Additional;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\Uni Work\RISER3DEngine\Includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Uni Work\FYP\RISER3DEngine\Libs\x64\Debug;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Uni Work\FYP\RISER3DEngine\Libs\x64\Debug;C:\Uni Work\FYP\RISER3DEngine\Libs\Additional;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>C:\Uni Work\RISER3DEngine\Includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Uni Work\FYP\RISER3DEngine\Libs\x64\Release;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\Uni Work\FYP\RISER3DEngine\Libs\x64\Release;C:\Uni Work\FYP\RISER3DEngine\Libs\Additional;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
