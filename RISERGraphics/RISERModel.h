@@ -1,15 +1,12 @@
 #pragma once
-#include "RISERVertex.h"
-#include "RISERVertexBuffer.h"
-#include "RISERIndexBuffer.h"
-#include "RISERConstantBuffer.h"
+#include "RISERMesh.h"
 
 using namespace DirectX;
 
 class RISERModel
 {
 public:
-	bool Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, ID3D11ShaderResourceView* texture, RISERConstantBuffer<RISERCB_VS_VertexShader>& vertexShader);
+	bool Init(const std::string& filePath,ID3D11Device* device, ID3D11DeviceContext* deviceContext, ID3D11ShaderResourceView* texture, RISERConstantBuffer<RISERCB_VS_VertexShader>& vertexShader);
 	void SetTexture(ID3D11ShaderResourceView* texture);
 	void Draw(const XMMATRIX& viewProjectionMatrix);
 
@@ -38,15 +35,15 @@ public:
 	const XMVECTOR& GetLeftVector();
 private:
 	void UpdateWorldMatrix();
-
+	std::vector<RISERMesh> meshes;
+	bool LoadModel(const std::string& filePath);
+	void ProcessNode(aiNode* node, const aiScene* scene);
+	RISERMesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
 	ID3D11Device* device = nullptr;
 	ID3D11DeviceContext* deviceContext = nullptr;
 	//shaders
 	RISERConstantBuffer<RISERCB_VS_VertexShader>* vertexShader = nullptr;
 	ID3D11ShaderResourceView* texture = nullptr;
-	//buffers
-	RISERVertexBuffer<RISERVertex> vertexBuffer;
-	RISERIndexBuffer indexBuffer;
 
 	XMMATRIX worldMatrix = XMMatrixIdentity();
 	//movement variables

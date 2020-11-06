@@ -1,4 +1,5 @@
 #pragma once
+#define NOMINMAX
 #include "RISERCOMException.h"
 #include <Windows.h>
 

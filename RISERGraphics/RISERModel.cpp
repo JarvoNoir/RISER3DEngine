@@ -1,6 +1,6 @@
 #include "RISERModel.h"
 
-bool RISERModel::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, ID3D11ShaderResourceView* texture, RISERConstantBuffer<RISERCB_VS_VertexShader>& vertexShader)
+bool RISERModel::Init(const std::string& filePath, ID3D11Device* device, ID3D11DeviceContext* deviceContext, ID3D11ShaderResourceView* texture, RISERConstantBuffer<RISERCB_VS_VertexShader>& vertexShader)
 {
 	this->device = device;
 	this->deviceContext = deviceContext;
@@ -9,42 +9,41 @@ bool RISERModel::Init(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
 
 	try
 	{
-		//Textured Square
-		RISERVertex v[] =
-		{
-			RISERVertex(-0.5f,  -0.5f, -0.5f, 0.0f, 1.0f), //FRONT Bottom Left   - [0]
-			RISERVertex(-0.5f,   0.5f, -0.5f, 0.0f, 0.0f), //FRONT Top Left      - [1]
-			RISERVertex(0.5f,   0.5f, -0.5f, 1.0f, 0.0f), //FRONT Top Right     - [2]
-			RISERVertex(0.5f,  -0.5f, -0.5f, 1.0f, 1.0f), //FRONT Bottom Right   - [3]
-			RISERVertex(-0.5f,  -0.5f, 0.5f, 0.0f, 1.0f), //BACK Bottom Left   - [4]
-			RISERVertex(-0.5f,   0.5f, 0.5f, 0.0f, 0.0f), //BACK Top Left      - [5]
-			RISERVertex(0.5f,   0.5f, 0.5f, 1.0f, 0.0f), //BACK Top Right     - [6]
-			RISERVertex(0.5f,  -0.5f, 0.5f, 1.0f, 1.0f), //BACK Bottom Right   - [7]
-		};
-
-		//Load Vertex Data
-		HRESULT hr = this->vertexBuffer.Init(this->device, v, ARRAYSIZE(v));
-		RISERCOM_ERROR_IF_FAILED(hr, "Failed to initialize vertex buffer.");
-
-		DWORD indices[] =
-		{
-			0, 1, 2, //FRONT
-			0, 2, 3, //FRONT
-			4, 7, 6, //BACK 
-			4, 6, 5, //BACK
-			3, 2, 6, //RIGHT SIDE
-			3, 6, 7, //RIGHT SIDE
-			4, 5, 1, //LEFT SIDE
-			4, 1, 0, //LEFT SIDE
-			1, 5, 6, //TOP
-			1, 6, 2, //TOP
-			0, 3, 7, //BOTTOM
-			0, 7, 4, //BOTTOM
-		};
-
-		//Load Index Data
-		hr = this->indexBuffer.Init(this->device, indices, ARRAYSIZE(indices));
-		RISERCOM_ERROR_IF_FAILED(hr, "Failed to initialize index buffer.");
+		////Textured Square
+		//RISERVertex v[] =
+		//{
+		//	RISERVertex(-0.5f,  -0.5f, -0.5f, 0.0f, 1.0f), //FRONT Bottom Left   - [0]
+		//	RISERVertex(-0.5f,   0.5f, -0.5f, 0.0f, 0.0f), //FRONT Top Left      - [1]
+		//	RISERVertex(0.5f,   0.5f, -0.5f, 1.0f, 0.0f), //FRONT Top Right     - [2]
+		//	RISERVertex(0.5f,  -0.5f, -0.5f, 1.0f, 1.0f), //FRONT Bottom Right   - [3]
+		//	RISERVertex(-0.5f,  -0.5f, 0.5f, 0.0f, 1.0f), //BACK Bottom Left   - [4]
+		//	RISERVertex(-0.5f,   0.5f, 0.5f, 0.0f, 0.0f), //BACK Top Left      - [5]
+		//	RISERVertex(0.5f,   0.5f, 0.5f, 1.0f, 0.0f), //BACK Top Right     - [6]
+		//	RISERVertex(0.5f,  -0.5f, 0.5f, 1.0f, 1.0f), //BACK Bottom Right   - [7]
+		//};
+		////Load Vertex Data
+		//HRESULT hr = this->vertexBuffer.Init(this->device, v, ARRAYSIZE(v));
+		//RISERCOM_ERROR_IF_FAILED(hr, "Failed to initialize vertex buffer.");
+		//DWORD indices[] =
+		//{
+		//	0, 1, 2, //FRONT
+		//	0, 2, 3, //FRONT
+		//	4, 7, 6, //BACK 
+		//	4, 6, 5, //BACK
+		//	3, 2, 6, //RIGHT SIDE
+		//	3, 6, 7, //RIGHT SIDE
+		//	4, 5, 1, //LEFT SIDE
+		//	4, 1, 0, //LEFT SIDE
+		//	1, 5, 6, //TOP
+		//	1, 6, 2, //TOP
+		//	0, 3, 7, //BOTTOM
+		//	0, 7, 4, //BOTTOM
+		//};
+		////Load Index Data
+		//hr = this->indexBuffer.Init(this->device, indices, ARRAYSIZE(indices));
+		//RISERCOM_ERROR_IF_FAILED(hr, "Failed to initialize index buffer.");
+		if (!this->LoadModel(filePath))
+			return false;
 	}
 	catch (RISERCOMException& exception)
 	{
@@ -70,10 +69,11 @@ void RISERModel::Draw(const XMMATRIX& viewProjectionMatrix)
 	this->vertexShader->ApplyChanges();
 	this->deviceContext->VSSetConstantBuffers(0, 1, this->vertexShader->GetAddressOf());
 	this->deviceContext->PSSetShaderResources(0, 1, &this->texture); //Set Texture
-	this->deviceContext->IASetIndexBuffer(this->indexBuffer.Get(), DXGI_FORMAT::DXGI_FORMAT_R32_UINT, 0);
-	UINT offset = 0;
-	this->deviceContext->IASetVertexBuffers(0, 1, this->vertexBuffer.GetAddressOf(), this->vertexBuffer.StridePtr(), &offset);
-	this->deviceContext->DrawIndexed(this->indexBuffer.BufferSize(), 0, 0); //Draw
+	//Draw
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		meshes[i].Draw();
+	}
 }
 
 void RISERModel::UpdateWorldMatrix()
@@ -85,6 +85,67 @@ void RISERModel::UpdateWorldMatrix()
 	this->backwardVector = XMVector3TransformCoord(this->DEFAULT_BACKWARD_VECTOR, vecRotationMatrix);
 	this->leftVector = XMVector3TransformCoord(this->DEFAULT_LEFT_VECTOR, vecRotationMatrix);
 	this->rightVector = XMVector3TransformCoord(this->DEFAULT_RIGHT_VECTOR, vecRotationMatrix);
+}
+
+bool RISERModel::LoadModel(const std::string& filePath)
+{
+	Assimp::Importer importer;
+	const aiScene* pScene = importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
+	if(pScene == nullptr)
+		return false;
+
+	this->ProcessNode(pScene->mRootNode, pScene);
+	return true;
+}
+
+void RISERModel::ProcessNode(aiNode* node, const aiScene* scene)
+{
+	for (UINT i = 0; i < node->mNumMeshes; i++)
+	{
+		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+		meshes.push_back(this->ProcessMesh(mesh, scene));
+	}
+
+	for (UINT i = 0; i < node->mNumChildren; i++)
+	{
+		this->ProcessNode(node->mChildren[i], scene);
+	}
+}
+
+RISERMesh RISERModel::ProcessMesh(aiMesh* mesh, const aiScene* scene)
+{
+	// Data to fill
+	std::vector<RISERVertex> vertices;
+	std::vector<DWORD> indices;
+
+	//Get vertices
+	for (UINT i = 0; i < mesh->mNumVertices; i++)
+	{
+		RISERVertex vertex;
+
+		vertex.pos.x = mesh->mVertices[i].x;
+		vertex.pos.y = mesh->mVertices[i].y;
+		vertex.pos.z = mesh->mVertices[i].z;
+
+		if (mesh->mTextureCoords[0])
+		{
+			vertex.texCoord.x = (float)mesh->mTextureCoords[0][i].x;
+			vertex.texCoord.y = (float)mesh->mTextureCoords[0][i].y;
+		}
+
+		vertices.push_back(vertex);
+	}
+
+	//Get indices
+	for (UINT i = 0; i < mesh->mNumFaces; i++)
+	{
+		aiFace face = mesh->mFaces[i];
+
+		for (UINT j = 0; j < face.mNumIndices; j++)
+			indices.push_back(face.mIndices[j]);
+	}
+
+	return RISERMesh(this->device, this->deviceContext, vertices, indices);
 }
 
 const XMVECTOR& RISERModel::GetPositionVector() const

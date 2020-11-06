@@ -127,7 +127,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_WINDOWS;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>RISERErrorLogger.h</AdditionalIncludeDirectories>
     </ClCompile>
@@ -173,6 +173,7 @@
     <ClCompile Include="RISERKeyboard\RISERKeyboardClass.cpp" />
     <ClCompile Include="RISERKeyboard\RISERKeyboardEvent.cpp" />
     <ClCompile Include="RISERGraphics\RISERModel.cpp" />
+    <ClCompile Include="RISERGraphics\RISERMesh.cpp" />
     <ClCompile Include="RISERMouse\RISERMouseClass.cpp" />
     <ClCompile Include="RISERMouse\RISERMouseEvent.cpp" />
     <ClCompile Include="RISERGraphics\RISERShaders.cpp" />
@@ -192,6 +193,7 @@
     <ClInclude Include="RISERGraphics\ImGui\imstb_textedit.h" />
     <ClInclude Include="RISERGraphics\ImGui\imstb_truetype.h" />
     <ClInclude Include="RISERGraphics\RISERModel.h" />
+    <ClInclude Include="RISERGraphics\RISERMesh.h" />
     <ClInclude Include="RISERTimer.h" />
     <ClInclude Include="RISERGraphics\RISERCamera.h" />
     <ClInclude Include="RISERGraphics\RISERConstantBuffer.h" />

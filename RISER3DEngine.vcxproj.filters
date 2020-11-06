@@ -102,6 +102,9 @@
     <ClCompile Include="RISERGraphics\RISERModel.cpp">
       <Filter>Source Files\RISERGraphics</Filter>
     </ClCompile>
+    <ClCompile Include="RISERGraphics\RISERMesh.cpp">
+      <Filter>Source Files\RISERGraphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RISERErrorLogger.h">
@@ -189,6 +192,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RISERGraphics\RISERModel.h">
+      <Filter>Header Files\RISERGraphics</Filter>
+    </ClInclude>
+    <ClInclude Include="RISERGraphics\RISERMesh.h">
       <Filter>Header Files\RISERGraphics</Filter>
     </ClInclude>
   </ItemGroup>

@@ -271,7 +271,7 @@ bool RISERGraphics::InitScene()
 		hr = this->risercb_ps_pixelShader.Init(this->device.Get(), this->deviceContext.Get());
 		RISERCOM_ERROR_IF_FAILED(hr, "Failed to initialise constant buffer(risercb_ps_pixelShader).");
 		//init model(s)
-		if (!model.Init(this->device.Get(), this->deviceContext.Get(), this->pavementTexture.Get(), risercb_vs_vertexShader))
+		if (!model.Init("Data\\Objects\\nanosuit\\nanosuit.obj",this->device.Get(), this->deviceContext.Get(), this->pavementTexture.Get(), risercb_vs_vertexShader))
 			return false;
 		
 		//init camera
